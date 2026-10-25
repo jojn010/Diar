@@ -1,25 +1,28 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
-  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">
-    <TextView android:layout_width="48dp" android:layout_height="48dp" android:text="@string/screen_signup_text_2" android:textSize="32sp" android:gravity="center" android:contentDescription="@string/screen_signup_contentdescription_2" android:onClick="goBack" />
-    <TextView style="@style/Subtitle" android:text="@string/screen_signup_text_3" android:gravity="center" android:layout_weight="1" />
-    <Space android:layout_width="48dp" android:layout_height="1dp" />
-  </LinearLayout>
-  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
-      <ImageView android:layout_width="match_parent" android:layout_height="110dp" android:src="@drawable/diar_logo" android:scaleType="fitCenter" android:contentDescription="@string/screen_signup_contentdescription_7" />
-      <TextView style="@style/Title" android:text="@string/screen_signup_text_8" />
-      <TextView style="@style/Muted" android:text="@string/screen_signup_text_9" />
-      <TextView style="@style/Muted" android:text="@string/screen_signup_text_10" />
-      <EditText android:id="@+id/full_name" style="@style/Field" android:hint="@string/screen_signup_hint_11" android:inputType="textPersonName" android:autofillHints="textPersonName" />
-      <TextView style="@style/Muted" android:text="@string/screen_signup_text_12" />
-      <EditText android:id="@+id/signup_phone" style="@style/Field" android:hint="@string/screen_signup_hint_13" android:inputType="phone" android:autofillHints="phone" />
-      <TextView style="@style/Muted" android:text="@string/screen_signup_text_14" />
-      <EditText android:id="@+id/email" style="@style/Field" android:hint="@string/screen_signup_hint_15" android:inputType="textEmailAddress" android:autofillHints="textEmailAddress" />
-      <TextView style="@style/Muted" android:text="@string/screen_signup_text_16" />
-      <EditText android:id="@+id/password" style="@style/Field" android:hint="@string/screen_signup_hint_17" android:inputType="textPassword" android:autofillHints="textPassword" />
-      <CheckBox android:id="@+id/terms" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/screen_signup_text_18" />
-      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_signup_text_19" android:id="@+id/signup_submit" />
-      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_signup_text_20" android:tag="login" android:onClick="navigate" />
+<LinearLayout xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
+    <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="64dp" ns0:gravity="center_vertical" ns0:paddingHorizontal="16dp">
+        <ImageButton ns0:layout_width="48dp" ns0:layout_height="48dp" ns0:gravity="center" ns0:contentDescription="@string/screen_signup_contentdescription_2" ns0:onClick="goBack" ns0:src="@drawable/ic_back" ns0:background="@drawable/pill" ns0:padding="12dp" />
+        <TextView style="@style/Subtitle" ns0:text="@string/screen_signup_text_3" ns0:gravity="center" ns0:layout_weight="1" ns0:layout_width="0dp" ns0:layout_marginBottom="0dp" ns0:layout_marginTop="0dp" ns0:textSize="16sp" />
+        <Space ns0:layout_width="48dp" ns0:layout_height="1dp" />
     </LinearLayout>
-  </ScrollView>
+    <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
+        <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
+            <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/hero_sage" ns0:padding="20dp" ns0:layout_marginBottom="20dp">
+                <TextView style="@style/Eyebrow" ns0:text="@string/signup_eyebrow" ns0:textColor="@color/terracotta" />
+                <TextView style="@style/Title" ns0:text="@string/screen_signup_text_8" />
+                <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_9" />
+            </LinearLayout>
+            <ImageView ns0:layout_width="match_parent" ns0:layout_height="110dp" ns0:src="@drawable/diar_logo" ns0:scaleType="fitCenter" ns0:contentDescription="@string/screen_signup_contentdescription_7" ns0:background="@drawable/cream" ns0:layout_marginBottom="20dp" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_10" />
+            <EditText ns0:id="@+id/full_name" style="@style/Field" ns0:hint="@string/screen_signup_hint_11" ns0:inputType="textPersonName" ns0:autofillHints="textPersonName" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_12" />
+            <EditText ns0:id="@+id/signup_phone" style="@style/Field" ns0:hint="@string/screen_signup_hint_13" ns0:inputType="phone" ns0:autofillHints="phone" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_14" />
+            <EditText ns0:id="@+id/email" style="@style/Field" ns0:hint="@string/screen_signup_hint_15" ns0:inputType="textEmailAddress" ns0:autofillHints="textEmailAddress" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_16" />
+            <EditText ns0:id="@+id/password" style="@style/Field" ns0:hint="@string/screen_signup_hint_17" ns0:inputType="textPassword" ns0:autofillHints="textPassword" />
+            <CheckBox ns0:id="@+id/terms" ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:text="@string/screen_signup_text_18" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_signup_text_19" ns0:id="@+id/signup_submit" />
+            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_signup_text_20" ns0:tag="login" ns0:onClick="navigate" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

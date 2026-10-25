@@ -1,19 +1,19 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
-  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">
-    <TextView android:layout_width="48dp" android:layout_height="48dp" android:text="@string/screen_conversation_text_2" android:textSize="32sp" android:gravity="center" android:contentDescription="@string/screen_conversation_contentdescription_2" android:onClick="goBack" />
-    <TextView style="@style/Subtitle" android:text="@string/screen_conversation_text_3" android:gravity="center" android:layout_weight="1" />
-    <Space android:layout_width="48dp" android:layout_height="1dp" />
-  </LinearLayout>
-  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
-      <TextView style="@style/Title" android:text="@string/screen_conversation_text_7" />
-      <TextView style="@style/Muted" android:text="@string/screen_conversation_text_8" />
-      <LinearLayout android:id="@+id/messages" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-        <TextView style="@style/Body" android:text="@string/screen_conversation_text_10" />
-      </LinearLayout>
-      <TextView style="@style/Muted" android:text="@string/screen_conversation_text_11" />
-      <EditText android:id="@+id/message_input" style="@style/Field" android:hint="@string/screen_conversation_hint_12" android:inputType="textCapSentences" android:autofillHints="textCapSentences" />
-      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_conversation_text_13" android:id="@+id/send_message" />
+<LinearLayout xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
+    <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="64dp" ns0:gravity="center_vertical" ns0:paddingHorizontal="16dp">
+        <ImageButton ns0:layout_width="48dp" ns0:layout_height="48dp" ns0:gravity="center" ns0:contentDescription="@string/screen_conversation_contentdescription_2" ns0:onClick="goBack" ns0:src="@drawable/ic_back" ns0:background="@drawable/pill" ns0:padding="12dp" />
+        <TextView style="@style/Subtitle" ns0:text="@string/screen_conversation_text_3" ns0:gravity="center" ns0:layout_weight="1" ns0:layout_width="0dp" ns0:layout_marginBottom="0dp" ns0:layout_marginTop="0dp" ns0:textSize="16sp" />
+        <Space ns0:layout_width="48dp" ns0:layout_height="1dp" />
     </LinearLayout>
-  </ScrollView>
+    <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
+        <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
+            <TextView style="@style/Title" ns0:text="@string/screen_conversation_text_7" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_conversation_text_8" />
+            <LinearLayout ns0:id="@+id/messages" ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical">
+                <TextView style="@style/Body" ns0:text="@string/screen_conversation_text_10" />
+            </LinearLayout>
+            <TextView style="@style/Muted" ns0:text="@string/screen_conversation_text_11" />
+            <EditText ns0:id="@+id/message_input" style="@style/Field" ns0:hint="@string/screen_conversation_hint_12" ns0:inputType="textCapSentences" ns0:autofillHints="textCapSentences" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_conversation_text_13" ns0:id="@+id/send_message" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

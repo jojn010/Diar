@@ -12,6 +12,8 @@ This is an offline prototype. Authentication and social sign-in are not connecte
 
 Edit the XML layouts directly in Android Studio. Shared colors and styles live in `res/values`; the supplied logo and property photos live in `res/drawable-nodpi`. `tools/generate_layouts.py` records the initial scaffold; rerunning it overwrites layout/style edits, so it is not part of the build.
 
+The visual system pairs Diar teal with sage, warm cream, peach/terracotta and honey gold. Shared button styles distinguish primary, secondary and outlined actions; the XML includes rounded photography, tinted cards and active navigation icons. The scaffold generator runs `tools/style_layouts.py` automatically to preserve this styling when regenerating from scratch.
+
 Property photos: Unsplash image IDs `photo-1600596542815-ffad4c1539a9`, `photo-1600585154340-be6161a56a0c`, and `photo-1600047509807-ba8f99d2cdde`.
 
 Build with `gradlew.bat assembleDebug`; run checks with `gradlew.bat lintDebug connectedDebugAndroidTest` with an emulator/device connected.

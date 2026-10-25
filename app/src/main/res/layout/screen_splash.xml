@@ -1,11 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
-  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
-      <Space android:layout_width="1dp" android:layout_height="100dp" />
-      <ImageView android:layout_width="match_parent" android:layout_height="300dp" android:src="@drawable/diar_logo" android:scaleType="fitCenter" android:contentDescription="@string/screen_splash_contentdescription_4" />
-      <TextView style="@style/Title" android:text="@string/screen_splash_text_5" android:gravity="center" />
-      <TextView style="@style/Muted" android:text="@string/screen_splash_text_6" android:gravity="center" />
-      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_splash_text_7" android:tag="welcome" android:onClick="navigate" />
-    </LinearLayout>
-  </ScrollView>
+<LinearLayout xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
+    <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
+        <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp" ns0:gravity="center_horizontal" ns0:background="@drawable/hero_sage">
+            <Space ns0:layout_width="1dp" ns0:layout_height="30dp" />
+            <ImageView ns0:layout_width="match_parent" ns0:layout_height="300dp" ns0:src="@drawable/diar_logo" ns0:scaleType="fitCenter" ns0:contentDescription="@string/screen_splash_contentdescription_4" ns0:background="@drawable/cream" ns0:layout_marginBottom="20dp" />
+            <TextView style="@style/Eyebrow" ns0:text="@string/splash_eyebrow" ns0:gravity="center" />
+            <TextView style="@style/Title" ns0:text="@string/screen_splash_text_5" ns0:gravity="center" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_splash_text_6" ns0:gravity="center" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_splash_text_7" ns0:tag="welcome" ns0:onClick="navigate" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

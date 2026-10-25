@@ -84,3 +84,5 @@ write('values', 'strings', ET.tostring(strings, encoding='unicode'))
 theme = res/'values/themes.xml'
 theme.write_text(theme.read_text().replace('<item name="android:windowLightNavigationBar">true</item>', ''), encoding='utf-8')
 print('Generated 16 reference screens and 4 supporting screens.')
+import runpy
+runpy.run_path(str(Path(__file__).with_name('style_layouts.py')))

@@ -25,6 +25,16 @@ class ScreenNavigationTest {
                 assertEquals("Screen $name must render", 1, activity.findViewById<FrameLayout>(R.id.main).childCount)
             }
             instrumentation.waitForIdleSync()
+            if (InstrumentationRegistry.getArguments().getString("screenshots") == "true") {
+                // Idle callbacks can precede the compositor's next frame.
+                android.os.SystemClock.sleep(250)
+                val bitmap = instrumentation.uiAutomation.takeScreenshot()
+                val directory = java.io.File(activity.getExternalFilesDir(null), "previews").apply { mkdirs() }
+                java.io.FileOutputStream(java.io.File(directory, "$name.png")).use {
+                    bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
+                }
+                bitmap.recycle()
+            }
         }
         instrumentation.runOnMainSync { activity.finish() }
     }

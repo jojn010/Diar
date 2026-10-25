@@ -1,24 +1,29 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
-  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">
-    <TextView android:layout_width="48dp" android:layout_height="48dp" android:text="@string/screen_payment_text_2" android:textSize="32sp" android:gravity="center" android:contentDescription="@string/screen_payment_contentdescription_2" android:onClick="goBack" />
-    <TextView style="@style/Subtitle" android:text="@string/screen_payment_text_3" android:gravity="center" android:layout_weight="1" />
-    <Space android:layout_width="48dp" android:layout_height="1dp" />
-  </LinearLayout>
-  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
-      <TextView style="@style/Title" android:text="@string/screen_payment_text_7" />
-      <TextView style="@style/Muted" android:text="@string/screen_payment_text_8" />
-      <TextView style="@style/Muted" android:text="@string/screen_payment_text_9" />
-      <EditText android:id="@+id/card_name" style="@style/Field" android:hint="@string/screen_payment_hint_10" android:inputType="textPersonName" android:autofillHints="textPersonName" />
-      <TextView style="@style/Muted" android:text="@string/screen_payment_text_11" />
-      <EditText android:id="@+id/card_number" style="@style/Field" android:hint="@string/screen_payment_hint_12" android:inputType="number" android:autofillHints="number" />
-      <TextView style="@style/Muted" android:text="@string/screen_payment_text_13" />
-      <EditText android:id="@+id/card_expiry" style="@style/Field" android:hint="@string/screen_payment_hint_14" android:inputType="text" android:autofillHints="text" />
-      <TextView style="@style/Muted" android:text="@string/screen_payment_text_15" />
-      <EditText android:id="@+id/card_cvc" style="@style/Field" android:hint="@string/screen_payment_hint_16" android:inputType="numberPassword" android:autofillHints="numberPassword" />
-      <TextView style="@style/Muted" android:text="@string/screen_payment_text_17" />
-      <EditText android:id="@+id/country" style="@style/Field" android:hint="@string/screen_payment_hint_18" android:inputType="text" android:autofillHints="text" />
-      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_payment_text_19" android:id="@+id/payment_submit" />
+<LinearLayout xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
+    <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="64dp" ns0:gravity="center_vertical" ns0:paddingHorizontal="16dp">
+        <ImageButton ns0:layout_width="48dp" ns0:layout_height="48dp" ns0:gravity="center" ns0:contentDescription="@string/screen_payment_contentdescription_2" ns0:onClick="goBack" ns0:src="@drawable/ic_back" ns0:background="@drawable/pill" ns0:padding="12dp" />
+        <TextView style="@style/Subtitle" ns0:text="@string/screen_payment_text_3" ns0:gravity="center" ns0:layout_weight="1" ns0:layout_width="0dp" ns0:layout_marginBottom="0dp" ns0:layout_marginTop="0dp" ns0:textSize="16sp" />
+        <Space ns0:layout_width="48dp" ns0:layout_height="1dp" />
     </LinearLayout>
-  </ScrollView>
+    <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
+        <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
+            <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/hero_teal" ns0:padding="20dp" ns0:layout_marginBottom="20dp">
+                <TextView style="@style/Eyebrow" ns0:text="@string/payment_eyebrow" ns0:textColor="@color/gold" />
+                <TextView style="@style/Subtitle" ns0:text="@string/payment_card_preview" ns0:textColor="@color/white" />
+                <TextView style="@style/Body" ns0:text="@string/payment_card_sample" ns0:textColor="@color/teal_light" />
+            </LinearLayout>
+            <TextView style="@style/Title" ns0:text="@string/screen_payment_text_7" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_8" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_9" />
+            <EditText ns0:id="@+id/card_name" style="@style/Field" ns0:hint="@string/screen_payment_hint_10" ns0:inputType="textPersonName" ns0:autofillHints="textPersonName" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_11" />
+            <EditText ns0:id="@+id/card_number" style="@style/Field" ns0:hint="@string/screen_payment_hint_12" ns0:inputType="number" ns0:autofillHints="number" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_13" />
+            <EditText ns0:id="@+id/card_expiry" style="@style/Field" ns0:hint="@string/screen_payment_hint_14" ns0:inputType="text" ns0:autofillHints="text" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_15" />
+            <EditText ns0:id="@+id/card_cvc" style="@style/Field" ns0:hint="@string/screen_payment_hint_16" ns0:inputType="numberPassword" ns0:autofillHints="numberPassword" />
+            <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_17" />
+            <EditText ns0:id="@+id/country" style="@style/Field" ns0:hint="@string/screen_payment_hint_18" ns0:inputType="text" ns0:autofillHints="text" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_payment_text_19" ns0:id="@+id/payment_submit" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
