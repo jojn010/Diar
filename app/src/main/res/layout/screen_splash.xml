@@ -1,0 +1,11 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
+  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+      <Space android:layout_width="1dp" android:layout_height="100dp" />
+      <ImageView android:layout_width="match_parent" android:layout_height="300dp" android:src="@drawable/diar_logo" android:scaleType="fitCenter" android:contentDescription="@string/screen_splash_contentdescription_4" />
+      <TextView style="@style/Title" android:text="@string/screen_splash_text_5" android:gravity="center" />
+      <TextView style="@style/Muted" android:text="@string/screen_splash_text_6" android:gravity="center" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_splash_text_7" android:tag="welcome" android:onClick="navigate" />
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

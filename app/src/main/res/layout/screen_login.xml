@@ -1,0 +1,17 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">
+    <TextView android:layout_width="48dp" android:layout_height="48dp" android:text="@string/screen_login_text_2" android:textSize="32sp" android:gravity="center" android:contentDescription="@string/screen_login_contentdescription_2" android:onClick="goBack" />
+    <TextView style="@style/Subtitle" android:text="@string/screen_login_text_3" android:gravity="center" android:layout_weight="1" />
+    <Space android:layout_width="48dp" android:layout_height="1dp" />
+  </LinearLayout>
+  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+      <TextView style="@style/Title" android:text="@string/screen_login_text_7" />
+      <TextView style="@style/Muted" android:text="@string/screen_login_text_8" />
+      <TextView style="@style/Muted" android:text="@string/screen_login_text_9" />
+      <EditText android:id="@+id/login_phone" style="@style/Field" android:hint="@string/screen_login_hint_10" android:inputType="phone" android:autofillHints="phone" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_login_text_11" android:id="@+id/login_submit" />
+      <TextView style="@style/Muted" android:text="@string/screen_login_text_12" />
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

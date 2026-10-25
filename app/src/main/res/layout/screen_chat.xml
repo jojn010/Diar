@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">
+    <TextView android:layout_width="48dp" android:layout_height="48dp" android:text="@string/screen_chat_text_2" android:textSize="32sp" android:gravity="center" android:contentDescription="@string/screen_chat_contentdescription_2" android:onClick="goBack" />
+    <TextView style="@style/Subtitle" android:text="@string/screen_chat_text_3" android:gravity="center" android:layout_weight="1" />
+    <Space android:layout_width="48dp" android:layout_height="1dp" />
+  </LinearLayout>
+  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+      <TextView style="@style/Title" android:text="@string/screen_chat_text_7" />
+      <TextView style="@style/Muted" android:text="@string/screen_chat_text_8" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_chat_text_9" android:tag="conversation" android:onClick="navigate" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_chat_text_10" android:tag="conversation" android:onClick="navigate" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_chat_text_11" android:tag="conversation" android:onClick="navigate" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_chat_text_12" android:tag="conversation" android:onClick="navigate" />
+    </LinearLayout>
+  </ScrollView>
+  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:background="@color/white" android:gravity="center">
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_chat_text_14" android:textSize="11sp" android:textColor="@color/teal" android:tag="home" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_chat_text_15" android:textSize="11sp" android:textColor="@color/teal" android:tag="favorites" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_chat_text_16" android:textSize="11sp" android:textColor="@color/teal" android:tag="discover" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_chat_text_17" android:textSize="11sp" android:textColor="@color/teal" android:tag="chat" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_chat_text_18" android:textSize="11sp" android:textColor="@color/teal" android:tag="account" android:onClick="navigate" />
+  </LinearLayout>
+</LinearLayout>

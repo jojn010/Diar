@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
+  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+      <TextView style="@style/Subtitle" android:text="@string/screen_home_text_3" android:textColor="@color/teal" />
+      <TextView style="@style/Title" android:text="@string/screen_home_text_4" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_home_text_5" android:tag="notifications" android:onClick="navigate" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_home_text_6" android:tag="search" android:onClick="navigate" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_home_text_7" android:tag="listings" android:onClick="navigate" />
+      <TextView style="@style/Subtitle" android:text="@string/screen_home_text_8" />
+      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/card" android:padding="12dp" android:layout_marginBottom="16dp" android:tag="detail" android:onClick="navigate">
+        <ImageView android:layout_width="match_parent" android:layout_height="210dp" android:src="@drawable/house_modern" android:scaleType="centerCrop" android:contentDescription="@string/screen_home_contentdescription_10" />
+        <TextView style="@style/Subtitle" android:text="@string/screen_home_text_11" android:textColor="@color/teal" />
+        <TextView style="@style/Subtitle" android:text="@string/screen_home_text_12" />
+        <TextView style="@style/Muted" android:text="@string/screen_home_text_13" />
+      </LinearLayout>
+      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/card" android:padding="12dp" android:layout_marginBottom="16dp" android:tag="detail" android:onClick="navigate">
+        <ImageView android:layout_width="match_parent" android:layout_height="210dp" android:src="@drawable/house_villa" android:scaleType="centerCrop" android:contentDescription="@string/screen_home_contentdescription_15" />
+        <TextView style="@style/Subtitle" android:text="@string/screen_home_text_16" android:textColor="@color/teal" />
+        <TextView style="@style/Subtitle" android:text="@string/screen_home_text_17" />
+        <TextView style="@style/Muted" android:text="@string/screen_home_text_18" />
+      </LinearLayout>
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_home_text_19" android:tag="listings" android:onClick="navigate" />
+    </LinearLayout>
+  </ScrollView>
+  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:background="@color/white" android:gravity="center">
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_home_text_21" android:textSize="11sp" android:textColor="@color/teal" android:tag="home" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_home_text_22" android:textSize="11sp" android:textColor="@color/teal" android:tag="favorites" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_home_text_23" android:textSize="11sp" android:textColor="@color/teal" android:tag="discover" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_home_text_24" android:textSize="11sp" android:textColor="@color/teal" android:tag="chat" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_home_text_25" android:textSize="11sp" android:textColor="@color/teal" android:tag="account" android:onClick="navigate" />
+  </LinearLayout>
+</LinearLayout>

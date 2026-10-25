@@ -1,0 +1,86 @@
+from pathlib import Path
+from xml.sax.saxutils import escape
+
+res = Path('app/src/main/res')
+def write(folder, name, text):
+    (res/folder).mkdir(parents=True, exist_ok=True)
+    (res/folder/(name+'.xml')).write_text(text, encoding='utf-8')
+
+write('values','colors','''<resources><color name="teal">#195D60</color><color name="cream">#F6F1E5</color><color name="ink">#172C30</color><color name="muted">#758487</color><color name="line">#E5EBE9</color><color name="white">#FFFFFF</color></resources>''')
+write('values','themes','''<resources><style name="Base.Theme.Diar" parent="Theme.Material3.Light.NoActionBar"><item name="colorPrimary">@color/teal</item><item name="colorOnPrimary">@color/white</item><item name="android:fontFamily">sans</item><item name="android:windowLightStatusBar">true</item><item name="android:windowLightNavigationBar">true</item><item name="android:windowBackground">@color/cream</item><item name="android:colorAccent">@color/teal</item></style><style name="Theme.Diar" parent="Base.Theme.Diar" /></resources>''')
+write('values-night','themes','''<resources><style name="Theme.Diar" parent="Base.Theme.Diar" /></resources>''')
+write('values','styles','''<resources>
+<style name="Body"><item name="android:layout_width">match_parent</item><item name="android:layout_height">wrap_content</item><item name="android:textColor">@color/ink</item><item name="android:textSize">15sp</item><item name="android:layout_marginBottom">12dp</item></style>
+<style name="Title" parent="Body"><item name="android:textSize">28sp</item><item name="android:textStyle">bold</item></style>
+<style name="Subtitle" parent="Body"><item name="android:textSize">18sp</item><item name="android:textStyle">bold</item><item name="android:layout_marginTop">12dp</item></style>
+<style name="Muted" parent="Body"><item name="android:textColor">@color/muted</item><item name="android:textSize">13sp</item></style>
+<style name="Field"><item name="android:layout_width">match_parent</item><item name="android:layout_height">56dp</item><item name="android:background">@drawable/field</item><item name="android:padding">16dp</item><item name="android:textSize">15sp</item><item name="android:textColor">@color/ink</item><item name="android:singleLine">true</item><item name="android:layout_marginBottom">16dp</item></style>
+<style name="Action"><item name="android:layout_width">match_parent</item><item name="android:layout_height">56dp</item><item name="android:textAllCaps">false</item><item name="android:textSize">14sp</item><item name="android:layout_marginTop">8dp</item><item name="cornerRadius">28dp</item></style>
+</resources>''')
+for name,color,radius in [('field','#F7F9F8',12),('card','#FFFFFF',18),('pill','#E5F0ED',24),('cream','#F6F1E5',20)]:
+    write('drawable',name,f'<shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="{color}"/><corners android:radius="{radius}dp"/><stroke android:width="1dp" android:color="#E5EBE9"/></shape>')
+def text(s, style='Body', extra=''):
+    return f'<TextView style="@style/{style}" android:text="{escape(s, {chr(34): "&quot;"})}" {extra}/>'
+def btn(s, target='', id='', extra=''):
+    attrs=(f'android:id="@+id/{id}" ' if id else '')+(f'android:tag="{target}" android:onClick="navigate" ' if target else '')
+    return f'<com.google.android.material.button.MaterialButton style="@style/Action" android:text="{s}" {attrs} {extra}/>'
+def field(label,id,hint='',kind='text'):
+    return text(label,'Muted')+f'<EditText android:id="@+id/{id}" style="@style/Field" android:hint="{hint}" android:inputType="{kind}" android:autofillHints="{kind}"/>'
+def photo(name='house_modern',height=210,extra=''):
+    return f'<ImageView android:layout_width="match_parent" android:layout_height="{height}dp" android:src="@drawable/{name}" android:scaleType="centerCrop" android:contentDescription="Diar property exterior" {extra}/>'
+def logo(h=180):
+    return f'<ImageView android:layout_width="match_parent" android:layout_height="{h}dp" android:src="@drawable/diar_logo" android:scaleType="fitCenter" android:contentDescription="Diar — بناء مستقبل مشرق"/>'
+def card(name='Olive Garden Residence',img='house_modern',price='$310,999',tag='detail'):
+    return f'<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/card" android:padding="12dp" android:layout_marginBottom="16dp" android:tag="{tag}" android:onClick="navigate">'+photo(img)+text(price+'  / year     ★ 4.8','Subtitle','android:textColor="@color/teal"')+text(name,'Subtitle')+text('⌖  Jerusalem  •  3 beds  •  2 baths','Muted')+'</LinearLayout>'
+def bar(title):
+    return '<LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">'+f'<TextView android:layout_width="48dp" android:layout_height="48dp" android:text="‹" android:textSize="32sp" android:gravity="center" android:contentDescription="Go back" android:onClick="goBack"/>'+text(title,'Subtitle','android:gravity="center" android:layout_weight="1"')+'<Space android:layout_width="48dp" android:layout_height="1dp"/></LinearLayout>'
+def nav():
+    return '<LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:background="@color/white" android:gravity="center">'+''.join(f'<TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="{icon}\n{label}" android:textSize="11sp" android:textColor="@color/teal" android:tag="{target}" android:onClick="navigate"/>' for icon,label,target in [('⌂','Home','home'),('♡','Saved','favorites'),('⌕','Discover','discover'),('☏','Inbox','chat'),('◎','Account','account')])+'</LinearLayout>'
+def screen(name,body,title=None,bottom=False):
+    write('layout','screen_'+name,'<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">'+(bar(title) if title else '')+'<ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">'+body+'</LinearLayout></ScrollView>'+(nav() if bottom else '')+'</LinearLayout>')
+write('layout','activity_main','<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/cream"/>')
+screen('splash','<Space android:layout_width="1dp" android:layout_height="100dp"/>'+logo(300)+text('A place to belong.','Title','android:gravity="center"')+text('Find your next chapter with Diar.','Muted','android:gravity="center"')+btn('Get started','welcome'))
+screen('welcome',logo(150)+text('Your home.\nYour next chapter.','Title')+text('Discover homes, apartments and spaces made for you.','Muted')+photo('house_villa',220)+btn('Continue with mobile number','login')+btn('Continue with Google',id='google')+btn('Continue with Facebook',id='facebook')+btn('New to Diar? Create an account','signup')+btn('Explore homes','home'))
+screen('signup',logo(110)+text('Welcome to Diar','Title')+text('Create an account and find a place of your own.','Muted')+field('Full name','full_name','Your full name','textPersonName')+field('Phone number','signup_phone','+970 59 000 0000','phone')+field('Email','email','you@example.com','textEmailAddress')+field('Password','password','At least 6 characters','textPassword')+'<CheckBox android:id="@+id/terms" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="I agree to the Terms and Privacy Policy"/>'+btn('Sign up',id='signup_submit')+btn('Already have an account? Log in','login'),title='Create account')
+screen('login',text('Log in with\nyour phone number','Title')+text('Enter your phone number to try the Diar prototype.','Muted')+field('Phone number','login_phone','+970 59 000 0000','phone')+btn('Continue',id='login_submit')+text('Demo only. No verification code is sent.','Muted'),title='Welcome back')
+screen('home',text('DIAR  /  ديار','Subtitle','android:textColor="@color/teal"')+text('Find your\nplace to belong.','Title')+btn('Notifications  •  3 new','notifications')+btn('⌕  Search a city or neighborhood','search')+btn('Home     ·     Villa     ·     Apartment','listings')+text('Popular homes','Subtitle')+card()+card('Sunlit Courtyard Villa','house_villa','$359,767')+btn('View all homes','listings'),bottom=True)
+screen('listings',text('Homes selected for you','Title')+text('3 homes available • Demo listings','Muted')+btn('⌕  Search location','search')+card()+card('Sunlit Courtyard Villa','house_villa','$359,767')+card('The Garden House','house_garden','$110,444'),title='Homes')
+screen('notifications',text('Recent notifications','Title')+btn('Clear all',id='clear_notifications')+'<LinearLayout android:id="@+id/notification_items" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">'+''.join(text(a,'Subtitle')+text(b,'Muted') for a,b in [('●  A home worth discovering','New homes have just arrived in your area.'),('⌂  Your next chapter awaits','Take a closer look at Olive Garden Residence.'),('★  A little more to love','Explore our highest-rated homes this week.')])+'</LinearLayout>',title='Notifications')
+screen('tour',photo('house_villa',360)+text('A space to call yours','Title')+text('TYPE 45  /  DIAR COLLECTION','Subtitle')+text('Natural light, open rooms and a quiet courtyard. Explore a thoughtfully designed home with space for every part of your day.')+text('◇  6 × 7.5 m     •     3 bedrooms','Muted')+photo('house_garden',150)+btn('View property details','detail'),title='Property gallery')
+screen('discover',photo('house_garden',190)+text('Discover your\nnext address.','Title')+btn('⌕  Search location','search')+text('Recent searches','Subtitle')+btn('Jerusalem  →','search')+btn('Ramallah  →','search')+btn('Explore the map','map')+text('Recommended for you','Subtitle')+card('The Garden House','house_garden','$110,444'),bottom=True)
+results=''.join(btn(s+'  ↗','detail') for s in ['Olive Garden Residence','Sunlit Courtyard Villa','The Garden House'])
+screen('search',field('Find a home','search_query','Search Jerusalem, Ramallah, or a property')+'<LinearLayout android:id="@+id/search_results" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">'+results+'</LinearLayout>'+text('Search by city or property name.','Muted')+btn('Show on map','map'),title='Search')
+screen('search_empty',text('⌕','Title','android:gravity="center" android:layout_marginTop="80dp" android:textSize="80sp"')+text('No homes found','Title','android:gravity="center"')+text('Try another city or neighborhood. More places are coming to Diar.','Muted','android:gravity="center"')+btn('Try another search','search'),title='Search')
+write('drawable','map_preview','''<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="360dp" android:height="440dp" android:viewportWidth="360" android:viewportHeight="440"><path android:fillColor="#E8EFEB" android:pathData="M0,0h360v440h-360z"/><path android:strokeColor="#D3E3D7" android:strokeWidth="28" android:pathData="M0,90L360,240M60,0L220,440M0,350L360,100"/><path android:strokeColor="#FFFFFF" android:strokeWidth="12" android:pathData="M0,60L360,210M20,0L180,440M0,300L360,50M0,380L360,260M280,0L290,440"/><path android:fillColor="#30195D60" android:strokeColor="#195D60" android:strokeWidth="2" android:pathData="M100,150C200,90 320,180 280,300C240,400 70,350 65,270Z"/></vector>''')
+screen('map',btn('⌕  Jerusalem','search')+text('3 listings in Jerusalem','Subtitle')+text('Illustrative map • Demo locations','Muted')+'<FrameLayout android:layout_width="match_parent" android:layout_height="380dp"><ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/map_preview" android:scaleType="fitXY" android:contentDescription="Illustrative neighborhood map"/>'+''.join(f'<TextView android:layout_width="110dp" android:layout_height="48dp" android:layout_marginTop="{y}dp" android:layout_marginStart="{x}dp" android:background="@drawable/card" android:text="{p}" android:textColor="@color/teal" android:gravity="center" android:tag="detail" android:onClick="navigate"/>' for x,y,p in [(30,80,'$310,999'),(160,180,'$359,767'),(45,280,'$110,444')])+'</FrameLayout>',title='Explore nearby')
+screen('chat',text('Conversations','Title')+text('Your next home starts with a hello.','Muted')+''.join(btn(n+'  ·  '+m,'conversation') for n,m in [('Diar Homes','See you on Sunday!'),('Lina Mansour','The villa is still available'),('Omar Khalil','Let’s arrange a viewing'),('Sara Nasser','Thank you for your interest')]),title='Inbox',bottom=True)
+screen('detail',photo('house_modern',300)+btn('♡  Save this home',id='save_home')+text('HOME     ★ 4.8  ·  356 reviews','Muted')+text('Olive Garden\nResidence','Title')+text('⌖  Jerusalem','Muted')+text('3 bedrooms    ·    2 bathrooms    ·    145 m²')+text('About this home','Subtitle')+text('A welcoming home with sun-filled rooms, a private garden and generous spaces to gather. Discover the details and arrange a viewing with Diar.')+btn('Explore the gallery','tour')+text('Your property contact','Subtitle')+btn('Diar Homes  ·  Send a message','conversation')+text('$310,999 / year','Title')+btn('Rent now','payment'),title='Property details')
+screen('payment',text('Payment details','Title')+text('Prototype checkout — use sample details only. No charge will be made.','Muted')+field('Name on card','card_name','Sample name','textPersonName')+field('Card number','card_number','4242 4242 4242 4242','number')+field('Expiry (MM/YY)','card_expiry','12/30')+field('CVC','card_cvc','123','numberPassword')+field('Country','country','Palestine')+btn('Complete demo payment',id='payment_submit'),title='Add payment method')
+screen('success',text('✓','Title','android:gravity="center" android:textColor="@color/teal" android:textSize="86sp" android:layout_marginTop="100dp"')+text('You’re all set.','Title','android:gravity="center"')+text('Your demo booking is complete.\nWelcome to your next chapter with Diar.','Muted','android:gravity="center"')+btn('See my listing','detail')+btn('Back to home','home'),title='Payment success')
+screen('favorites',text('Your saved spaces','Title')+'<LinearLayout android:id="@+id/saved_items" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">'+card()+'</LinearLayout>'+text('Tap the heart on a property to save or remove it.','Muted'),title='Favorites',bottom=True)
+screen('account',logo(180)+text('Welcome to Diar','Title')+text('You are exploring the local demo.','Muted')+btn('My saved homes','favorites')+btn('Notifications','notifications')+btn('All prototype screens','screens')+btn('Back to welcome','welcome'),title='Account',bottom=True)
+screen('conversation',text('Diar Homes','Title')+text('Property specialist • Demo conversation','Muted')+'<LinearLayout android:id="@+id/messages" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">'+text('Hello! How can we help you find your next home?')+'</LinearLayout>'+field('Your message','message_input','Ask about this property','textCapSentences')+btn('Send message',id='send_message'),title='Chat')
+names=['splash','welcome','signup','login','home','listings','notifications','tour','discover','search','search_empty','map','chat','detail','payment','success']
+screen('screens',text('Diar screen gallery','Title')+''.join(btn(f'{i+1:02}  '+n.replace('_',' ').title(),n) for i,n in enumerate(names)),title='Prototype screens')
+# Keep generated layouts readable and all interface copy ready for localization.
+import xml.etree.ElementTree as ET
+ET.register_namespace('android', 'http://schemas.android.com/apk/res/android')
+android = '{http://schemas.android.com/apk/res/android}'
+strings = ET.Element('resources')
+ET.SubElement(strings, 'string', name='app_name').text = 'Diar'
+for path in sorted((res/'layout').glob('*.xml')):
+    root = ET.fromstring(path.read_text(encoding='utf-8'))
+    for i, node in enumerate(root.iter()):
+        for attr in ['text', 'hint', 'contentDescription']:
+            value = node.get(android+attr)
+            if value and not value.startswith('@'):
+                key = f'{path.stem}_{attr.lower()}_{i}'
+                ET.SubElement(strings, 'string', name=key).text = value.replace("'", "\\'")
+                node.set(android+attr, '@string/'+key)
+    ET.indent(root)
+    path.write_text(ET.tostring(root, encoding='unicode'), encoding='utf-8')
+ET.indent(strings)
+write('values', 'strings', ET.tostring(strings, encoding='unicode'))
+theme = res/'values/themes.xml'
+theme.write_text(theme.read_text().replace('<item name="android:windowLightNavigationBar">true</item>', ''), encoding='utf-8')
+print('Generated 16 reference screens and 4 supporting screens.')

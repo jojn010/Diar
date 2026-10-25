@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">
+    <TextView android:layout_width="48dp" android:layout_height="48dp" android:text="@string/screen_favorites_text_2" android:textSize="32sp" android:gravity="center" android:contentDescription="@string/screen_favorites_contentdescription_2" android:onClick="goBack" />
+    <TextView style="@style/Subtitle" android:text="@string/screen_favorites_text_3" android:gravity="center" android:layout_weight="1" />
+    <Space android:layout_width="48dp" android:layout_height="1dp" />
+  </LinearLayout>
+  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+      <TextView style="@style/Title" android:text="@string/screen_favorites_text_7" />
+      <LinearLayout android:id="@+id/saved_items" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/card" android:padding="12dp" android:layout_marginBottom="16dp" android:tag="detail" android:onClick="navigate">
+          <ImageView android:layout_width="match_parent" android:layout_height="210dp" android:src="@drawable/house_modern" android:scaleType="centerCrop" android:contentDescription="@string/screen_favorites_contentdescription_10" />
+          <TextView style="@style/Subtitle" android:text="@string/screen_favorites_text_11" android:textColor="@color/teal" />
+          <TextView style="@style/Subtitle" android:text="@string/screen_favorites_text_12" />
+          <TextView style="@style/Muted" android:text="@string/screen_favorites_text_13" />
+        </LinearLayout>
+      </LinearLayout>
+      <TextView style="@style/Muted" android:text="@string/screen_favorites_text_14" />
+    </LinearLayout>
+  </ScrollView>
+  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:background="@color/white" android:gravity="center">
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_favorites_text_16" android:textSize="11sp" android:textColor="@color/teal" android:tag="home" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_favorites_text_17" android:textSize="11sp" android:textColor="@color/teal" android:tag="favorites" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_favorites_text_18" android:textSize="11sp" android:textColor="@color/teal" android:tag="discover" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_favorites_text_19" android:textSize="11sp" android:textColor="@color/teal" android:tag="chat" android:onClick="navigate" />
+    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:text="@string/screen_favorites_text_20" android:textSize="11sp" android:textColor="@color/teal" android:tag="account" android:onClick="navigate" />
+  </LinearLayout>
+</LinearLayout>

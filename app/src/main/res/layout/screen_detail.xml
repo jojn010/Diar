@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">
+    <TextView android:layout_width="48dp" android:layout_height="48dp" android:text="@string/screen_detail_text_2" android:textSize="32sp" android:gravity="center" android:contentDescription="@string/screen_detail_contentdescription_2" android:onClick="goBack" />
+    <TextView style="@style/Subtitle" android:text="@string/screen_detail_text_3" android:gravity="center" android:layout_weight="1" />
+    <Space android:layout_width="48dp" android:layout_height="1dp" />
+  </LinearLayout>
+  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+      <ImageView android:layout_width="match_parent" android:layout_height="300dp" android:src="@drawable/house_modern" android:scaleType="centerCrop" android:contentDescription="@string/screen_detail_contentdescription_7" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_detail_text_8" android:id="@+id/save_home" />
+      <TextView style="@style/Muted" android:text="@string/screen_detail_text_9" />
+      <TextView style="@style/Title" android:text="@string/screen_detail_text_10" />
+      <TextView style="@style/Muted" android:text="@string/screen_detail_text_11" />
+      <TextView style="@style/Body" android:text="@string/screen_detail_text_12" />
+      <TextView style="@style/Subtitle" android:text="@string/screen_detail_text_13" />
+      <TextView style="@style/Body" android:text="@string/screen_detail_text_14" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_detail_text_15" android:tag="tour" android:onClick="navigate" />
+      <TextView style="@style/Subtitle" android:text="@string/screen_detail_text_16" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_detail_text_17" android:tag="conversation" android:onClick="navigate" />
+      <TextView style="@style/Title" android:text="@string/screen_detail_text_18" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_detail_text_19" android:tag="payment" android:onClick="navigate" />
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

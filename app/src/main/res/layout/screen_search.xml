@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/white">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="64dp" android:gravity="center_vertical" android:paddingHorizontal="16dp">
+    <TextView android:layout_width="48dp" android:layout_height="48dp" android:text="@string/screen_search_text_2" android:textSize="32sp" android:gravity="center" android:contentDescription="@string/screen_search_contentdescription_2" android:onClick="goBack" />
+    <TextView style="@style/Subtitle" android:text="@string/screen_search_text_3" android:gravity="center" android:layout_weight="1" />
+    <Space android:layout_width="48dp" android:layout_height="1dp" />
+  </LinearLayout>
+  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+      <TextView style="@style/Muted" android:text="@string/screen_search_text_7" />
+      <EditText android:id="@+id/search_query" style="@style/Field" android:hint="@string/screen_search_hint_8" android:inputType="text" android:autofillHints="text" />
+      <LinearLayout android:id="@+id/search_results" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_search_text_10" android:tag="detail" android:onClick="navigate" />
+        <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_search_text_11" android:tag="detail" android:onClick="navigate" />
+        <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_search_text_12" android:tag="detail" android:onClick="navigate" />
+      </LinearLayout>
+      <TextView style="@style/Muted" android:text="@string/screen_search_text_13" />
+      <com.google.android.material.button.MaterialButton style="@style/Action" android:text="@string/screen_search_text_14" android:tag="map" android:onClick="navigate" />
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>
