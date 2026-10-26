@@ -9,12 +9,12 @@
             <TextView style="@style/Muted" ns0:text="@string/screen_search_text_7" />
             <EditText ns0:id="@+id/search_query" style="@style/Field" ns0:hint="@string/screen_search_hint_8" ns0:inputType="text" ns0:autofillHints="text" />
             <LinearLayout ns0:id="@+id/search_results" ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical">
-                <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_search_text_10" ns0:tag="detail" ns0:onClick="navigate" />
-                <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_search_text_11" ns0:tag="detail" ns0:onClick="navigate" />
-                <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_search_text_12" ns0:tag="detail" ns0:onClick="navigate" />
+                <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_search_text_10" ns0:tag="detail" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+                <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_search_text_11" ns0:tag="detail" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+                <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_search_text_12" ns0:tag="detail" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             </LinearLayout>
             <TextView style="@style/Muted" ns0:text="@string/screen_search_text_13" />
-            <com.google.android.material.button.MaterialButton style="@style/Secondary" ns0:text="@string/screen_search_text_14" ns0:tag="map" ns0:onClick="navigate" />
+            <com.google.android.material.button.MaterialButton style="@style/Secondary" ns0:text="@string/screen_search_text_14" ns0:tag="map" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

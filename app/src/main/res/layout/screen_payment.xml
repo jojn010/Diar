@@ -16,14 +16,14 @@
             <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_9" />
             <EditText ns0:id="@+id/card_name" style="@style/Field" ns0:hint="@string/screen_payment_hint_10" ns0:inputType="textPersonName" ns0:autofillHints="textPersonName" />
             <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_11" />
-            <EditText ns0:id="@+id/card_number" style="@style/Field" ns0:hint="@string/screen_payment_hint_12" ns0:inputType="number" ns0:autofillHints="number" />
+            <EditText ns0:id="@+id/card_number" style="@style/Field" ns0:hint="@string/screen_payment_hint_12" ns0:inputType="number" ns0:autofillHints="number" ns0:textDirection="ltr" ns0:gravity="start|center_vertical" />
             <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_13" />
-            <EditText ns0:id="@+id/card_expiry" style="@style/Field" ns0:hint="@string/screen_payment_hint_14" ns0:inputType="text" ns0:autofillHints="text" />
+            <EditText ns0:id="@+id/card_expiry" style="@style/Field" ns0:hint="@string/screen_payment_hint_14" ns0:inputType="text" ns0:autofillHints="text" ns0:textDirection="ltr" ns0:gravity="start|center_vertical" />
             <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_15" />
-            <EditText ns0:id="@+id/card_cvc" style="@style/Field" ns0:hint="@string/screen_payment_hint_16" ns0:inputType="numberPassword" ns0:autofillHints="numberPassword" />
+            <EditText ns0:id="@+id/card_cvc" style="@style/Field" ns0:hint="@string/screen_payment_hint_16" ns0:inputType="numberPassword" ns0:autofillHints="numberPassword" ns0:textDirection="ltr" ns0:gravity="start|center_vertical" />
             <TextView style="@style/Muted" ns0:text="@string/screen_payment_text_17" />
             <EditText ns0:id="@+id/country" style="@style/Field" ns0:hint="@string/screen_payment_hint_18" ns0:inputType="text" ns0:autofillHints="text" />
-            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_payment_text_19" ns0:id="@+id/payment_submit" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_payment_text_19" ns0:id="@+id/payment_submit" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

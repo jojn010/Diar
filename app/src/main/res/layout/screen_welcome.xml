@@ -1,18 +1,19 @@
-<LinearLayout xmlns:ns0="http://schemas.android.com/apk/res/android" xmlns:ns1="http://schemas.android.com/apk/res-auto" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
     <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
         <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
+            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:id="@+id/change_language" ns0:text="@string/change_language" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             <ImageView ns0:layout_width="match_parent" ns0:layout_height="130dp" ns0:src="@drawable/diar_logo" ns0:scaleType="fitCenter" ns0:contentDescription="@string/screen_welcome_contentdescription_3" ns0:background="@drawable/cream" ns0:layout_marginBottom="20dp" />
             <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/hero_sage" ns0:padding="20dp" ns0:layout_marginBottom="12dp">
                 <TextView style="@style/Eyebrow" ns0:text="@string/welcome_eyebrow" />
                 <TextView style="@style/Title" ns0:text="@string/screen_welcome_text_4" />
                 <TextView style="@style/Muted" ns0:text="@string/screen_welcome_text_5" />
-                <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="220dp" ns0:src="@drawable/house_villa" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_welcome_contentdescription_6" ns1:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
+                <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="220dp" ns0:src="@drawable/house_villa" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_welcome_contentdescription_6" app:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
             </LinearLayout>
-            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_welcome_text_7" ns0:tag="login" ns0:onClick="navigate" />
-            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_welcome_text_8" ns0:id="@+id/google" />
-            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_welcome_text_9" ns0:id="@+id/facebook" />
-            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_welcome_text_10" ns0:tag="signup" ns0:onClick="navigate" />
-            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_welcome_text_11" ns0:tag="home" ns0:onClick="navigate" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_welcome_text_7" ns0:tag="login" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_welcome_text_8" ns0:id="@+id/google" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_welcome_text_9" ns0:id="@+id/facebook" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_welcome_text_10" ns0:tag="signup" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_welcome_text_11" ns0:tag="home" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

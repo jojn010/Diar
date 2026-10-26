@@ -13,7 +13,7 @@
             </LinearLayout>
             <TextView style="@style/Muted" ns0:text="@string/screen_conversation_text_11" />
             <EditText ns0:id="@+id/message_input" style="@style/Field" ns0:hint="@string/screen_conversation_hint_12" ns0:inputType="textCapSentences" ns0:autofillHints="textCapSentences" />
-            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_conversation_text_13" ns0:id="@+id/send_message" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_conversation_text_13" ns0:id="@+id/send_message" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

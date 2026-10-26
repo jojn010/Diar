@@ -1,4 +1,4 @@
-<LinearLayout xmlns:ns0="http://schemas.android.com/apk/res/android" xmlns:ns1="http://schemas.android.com/apk/res-auto" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
     <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
         <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
             <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="56dp" ns0:gravity="center_vertical" ns0:layout_marginBottom="16dp">
@@ -9,16 +9,16 @@
                 <TextView style="@style/Eyebrow" ns0:text="@string/home_eyebrow" ns0:textColor="@color/gold" />
                 <TextView style="@style/Title" ns0:text="@string/home_headline" ns0:textColor="@color/white" ns0:textSize="34sp" />
                 <TextView style="@style/Body" ns0:text="@string/home_description" ns0:textColor="@color/teal_light" />
-                <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/home_search" ns0:tag="search" ns0:onClick="navigate" ns0:textSize="13sp" />
+                <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/home_search" ns0:tag="search" ns0:onClick="navigate" ns0:textSize="13sp" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             </LinearLayout>
             <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:layout_marginBottom="16dp">
-                <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/category_homes" ns0:tag="listings" ns0:onClick="navigate" ns0:layout_width="0dp" ns0:layout_weight="1" ns0:layout_height="48dp" ns0:layout_marginEnd="6dp" ns0:textSize="12sp" />
-                <com.google.android.material.button.MaterialButton style="@style/Warm" ns0:text="@string/category_villas" ns0:tag="listings" ns0:onClick="navigate" ns0:layout_width="0dp" ns0:layout_weight="1" ns0:layout_height="48dp" ns0:layout_marginEnd="6dp" ns0:textSize="12sp" />
-                <com.google.android.material.button.MaterialButton style="@style/Gold" ns0:text="@string/category_apartments" ns0:tag="listings" ns0:onClick="navigate" ns0:layout_width="0dp" ns0:layout_weight="1" ns0:layout_height="48dp" ns0:layout_marginEnd="6dp" ns0:textSize="12sp" />
+                <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/category_homes" ns0:tag="listings" ns0:onClick="navigate" ns0:layout_width="0dp" ns0:layout_weight="1" ns0:layout_height="wrap_content" ns0:layout_marginEnd="6dp" ns0:textSize="12sp" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+                <com.google.android.material.button.MaterialButton style="@style/Warm" ns0:text="@string/category_villas" ns0:tag="listings" ns0:onClick="navigate" ns0:layout_width="0dp" ns0:layout_weight="1" ns0:layout_height="wrap_content" ns0:layout_marginEnd="6dp" ns0:textSize="12sp" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+                <com.google.android.material.button.MaterialButton style="@style/Gold" ns0:text="@string/category_apartments" ns0:tag="listings" ns0:onClick="navigate" ns0:layout_width="0dp" ns0:layout_weight="1" ns0:layout_height="wrap_content" ns0:layout_marginEnd="6dp" ns0:textSize="12sp" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             </LinearLayout>
             <TextView style="@style/Subtitle" ns0:text="@string/home_popular" />
             <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/card" ns0:padding="10dp" ns0:layout_marginBottom="20dp" ns0:tag="detail" ns0:onClick="navigate" ns0:elevation="2dp" ns0:foreground="?attr/selectableItemBackground">
-                <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="210dp" ns0:src="@drawable/house_modern" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_home_contentdescription_10" ns1:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
+                <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="210dp" ns0:src="@drawable/house_modern" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_home_contentdescription_10" app:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
                 <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/surface_sage" ns0:padding="14dp">
                     <TextView style="@style/Subtitle" ns0:text="@string/screen_home_text_12" ns0:layout_marginTop="4dp" ns0:layout_marginBottom="6dp" />
                     <TextView style="@style/Subtitle" ns0:text="@string/screen_home_text_11" ns0:textColor="@color/teal" ns0:textSize="17sp" ns0:layout_marginTop="0dp" />
@@ -26,14 +26,14 @@
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/card" ns0:padding="10dp" ns0:layout_marginBottom="20dp" ns0:tag="detail" ns0:onClick="navigate" ns0:elevation="2dp" ns0:foreground="?attr/selectableItemBackground">
-                <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="210dp" ns0:src="@drawable/house_villa" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_home_contentdescription_15" ns1:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
+                <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="210dp" ns0:src="@drawable/house_villa" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_home_contentdescription_15" app:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
                 <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/surface_peach" ns0:padding="14dp">
                     <TextView style="@style/Subtitle" ns0:text="@string/screen_home_text_17" ns0:layout_marginTop="4dp" ns0:layout_marginBottom="6dp" />
                     <TextView style="@style/Subtitle" ns0:text="@string/screen_home_text_16" ns0:textColor="@color/teal" ns0:textSize="17sp" ns0:layout_marginTop="0dp" />
                     <TextView style="@style/Muted" ns0:text="@string/screen_home_text_18" />
                 </LinearLayout>
             </LinearLayout>
-            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_home_text_19" ns0:tag="listings" ns0:onClick="navigate" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_home_text_19" ns0:tag="listings" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>
     <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="70dp" ns0:background="@drawable/nav_background" ns0:gravity="center" ns0:layout_marginHorizontal="16dp" ns0:layout_marginBottom="8dp" ns0:padding="6dp" ns0:elevation="3dp">

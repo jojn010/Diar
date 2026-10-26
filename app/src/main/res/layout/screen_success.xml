@@ -9,8 +9,8 @@
             <ImageView style="@style/Title" ns0:gravity="center" ns0:textColor="@color/teal" ns0:layout_marginTop="48dp" ns0:src="@drawable/ic_check" ns0:layout_width="112dp" ns0:layout_height="112dp" ns0:padding="32dp" ns0:layout_marginBottom="28dp" ns0:background="@drawable/surface_sage" ns0:contentDescription="@string/status_success" />
             <TextView style="@style/Title" ns0:text="@string/screen_success_text_8" ns0:gravity="center" />
             <TextView style="@style/Muted" ns0:text="@string/screen_success_text_9" ns0:gravity="center" />
-            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_success_text_10" ns0:tag="detail" ns0:onClick="navigate" />
-            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_success_text_11" ns0:tag="home" ns0:onClick="navigate" />
+            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_success_text_10" ns0:tag="detail" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_success_text_11" ns0:tag="home" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,0 +1,25 @@
+<resources>
+    <string name="change_language">اللغة / English</string>
+    <string name="language_title">لغة التطبيق</string>
+    <string name="language_system">استخدام لغة الجهاز</string>
+    <string name="language_english">English</string>
+    <string name="language_arabic">العربية</string>
+    <string name="google_demo">سيتوفر تسجيل الدخول باستخدام Google لاحقاً. استخدم «استكشف المنازل» حالياً.</string>
+    <string name="facebook_demo">سيتوفر تسجيل الدخول باستخدام Facebook لاحقاً. استخدم «استكشف المنازل» حالياً.</string>
+    <string name="error_phone">أدخل رقم هاتف صالحاً</string>
+    <string name="error_name">أدخل اسمك</string>
+    <string name="error_email">أدخل بريداً إلكترونياً صالحاً</string>
+    <string name="error_password">استخدم ٦ أحرف على الأقل</string>
+    <string name="accept_terms">يرجى الموافقة على الشروط للمتابعة</string>
+    <string name="home_saved">♥ تمت الإضافة إلى المفضلة</string>
+    <string name="home_save">♡ حفظ هذا المنزل</string>
+    <string name="favorites_empty">لا توجد منازل محفوظة بعد. استكشف عقاراً واضغط على «حفظ».</string>
+    <string name="notifications_cleared">اطّلعت على جميع الإشعارات</string>
+    <string name="search_no_matches">لم نعثر على منازل. جرّب مدينة أو اسم عقار آخر.</string>
+    <string name="error_card_name">أدخل اسماً تجريبياً</string>
+    <string name="error_card_number">استخدم من ١٣ إلى ١٩ رقماً تجريبياً</string>
+    <string name="error_expiry">استخدم صيغة شهر/سنة</string>
+    <string name="error_cvc">استخدم ٣ أو ٤ أرقام</string>
+    <string name="error_country">أدخل اسم البلد</string>
+    <string name="message_added">أضيفت الرسالة إلى هذه المحادثة التجريبية المحلية</string>
+</resources>

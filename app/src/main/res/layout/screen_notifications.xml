@@ -7,7 +7,7 @@
     <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
         <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
             <TextView style="@style/Title" ns0:text="@string/screen_notifications_text_7" />
-            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_notifications_text_8" ns0:id="@+id/clear_notifications" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_notifications_text_8" ns0:id="@+id/clear_notifications" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             <LinearLayout ns0:id="@+id/notification_items" ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical">
                 <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/surface_sage" ns0:padding="18dp" ns0:layout_marginTop="12dp">
                     <TextView style="@style/Subtitle" ns0:text="@string/screen_notifications_text_10" />

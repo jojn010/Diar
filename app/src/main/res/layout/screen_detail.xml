@@ -1,4 +1,4 @@
-<LinearLayout xmlns:ns0="http://schemas.android.com/apk/res/android" xmlns:ns1="http://schemas.android.com/apk/res-auto" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
     <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="64dp" ns0:gravity="center_vertical" ns0:paddingHorizontal="16dp">
         <ImageButton ns0:layout_width="48dp" ns0:layout_height="48dp" ns0:gravity="center" ns0:contentDescription="@string/screen_detail_contentdescription_2" ns0:onClick="goBack" ns0:src="@drawable/ic_back" ns0:background="@drawable/pill" ns0:padding="12dp" />
         <TextView style="@style/Subtitle" ns0:text="@string/screen_detail_text_3" ns0:gravity="center" ns0:layout_weight="1" ns0:layout_width="0dp" ns0:layout_marginBottom="0dp" ns0:layout_marginTop="0dp" ns0:textSize="16sp" />
@@ -6,19 +6,19 @@
     </LinearLayout>
     <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
         <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
-            <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="300dp" ns0:src="@drawable/house_modern" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_detail_contentdescription_7" ns1:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
-            <com.google.android.material.button.MaterialButton style="@style/Warm" ns0:text="@string/screen_detail_text_8" ns0:id="@+id/save_home" />
+            <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="300dp" ns0:src="@drawable/house_modern" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_detail_contentdescription_7" app:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
+            <com.google.android.material.button.MaterialButton style="@style/Warm" ns0:text="@string/screen_detail_text_8" ns0:id="@+id/save_home" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             <TextView style="@style/Muted" ns0:text="@string/screen_detail_text_9" ns0:background="@drawable/surface_gold" ns0:padding="14dp" ns0:textColor="@color/ink" />
             <TextView style="@style/Title" ns0:text="@string/screen_detail_text_10" />
             <TextView style="@style/Muted" ns0:text="@string/screen_detail_text_11" />
             <TextView style="@style/Body" ns0:text="@string/screen_detail_text_12" ns0:background="@drawable/surface_sage" ns0:padding="14dp" ns0:textColor="@color/ink" />
             <TextView style="@style/Subtitle" ns0:text="@string/screen_detail_text_13" />
             <TextView style="@style/Body" ns0:text="@string/screen_detail_text_14" />
-            <com.google.android.material.button.MaterialButton style="@style/Secondary" ns0:text="@string/screen_detail_text_15" ns0:tag="tour" ns0:onClick="navigate" />
+            <com.google.android.material.button.MaterialButton style="@style/Secondary" ns0:text="@string/screen_detail_text_15" ns0:tag="tour" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             <TextView style="@style/Subtitle" ns0:text="@string/screen_detail_text_16" />
-            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_detail_text_17" ns0:tag="conversation" ns0:onClick="navigate" />
+            <com.google.android.material.button.MaterialButton style="@style/Outline" ns0:text="@string/screen_detail_text_17" ns0:tag="conversation" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             <TextView style="@style/Title" ns0:text="@string/screen_detail_text_18" />
-            <com.google.android.material.button.MaterialButton style="@style/Gold" ns0:text="@string/screen_detail_text_19" ns0:tag="payment" ns0:onClick="navigate" />
+            <com.google.android.material.button.MaterialButton style="@style/Gold" ns0:text="@string/screen_detail_text_19" ns0:tag="payment" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

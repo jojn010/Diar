@@ -86,3 +86,4 @@ theme.write_text(theme.read_text().replace('<item name="android:windowLightNavig
 print('Generated 16 reference screens and 4 supporting screens.')
 import runpy
 runpy.run_path(str(Path(__file__).with_name('style_layouts.py')))
+runpy.run_path(str(Path(__file__).with_name('localize_layouts.py')))

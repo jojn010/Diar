@@ -8,6 +8,12 @@ Included: Diar's supplied logo, teal/cream styling, bundled property photographs
 
 This is an offline prototype. Authentication and social sign-in are not connected. Messages remain local. Checkout does not charge, submit or store card information. The map is an illustrative vector, not a mapping service. Property names, pricing and notifications are demonstration content.
 
+## Languages
+
+English and Arabic are supported across all screens, form errors and accessibility labels. Use **Language / العربية** on the start, welcome or account screen to choose Arabic, English or the device language. Android remembers the choice; Arabic uses right-to-left layouts with mirrored back arrows, while phone numbers, email and card fields retain left-to-right text. Arabic city/property searches and Arabic-Indic digits in demo checkout are supported. Android 13+ also exposes the languages in system app-language settings.
+
+Arabic translations live in `res/values-ar`. The scaffold generator runs `tools/localize_layouts.py` after styling; it checks for missing screen translations rather than silently falling back to English.
+
 ## Editing
 
 Edit the XML layouts directly in Android Studio. Shared colors and styles live in `res/values`; the supplied logo and property photos live in `res/drawable-nodpi`. `tools/generate_layouts.py` records the initial scaffold; rerunning it overwrites layout/style edits, so it is not part of the build.

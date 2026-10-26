@@ -1,4 +1,4 @@
-<LinearLayout xmlns:ns0="http://schemas.android.com/apk/res/android" xmlns:ns1="http://schemas.android.com/apk/res-auto" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:ns0="http://schemas.android.com/apk/res/android" ns0:layout_width="match_parent" ns0:layout_height="match_parent" ns0:orientation="vertical" ns0:background="@color/canvas">
     <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="64dp" ns0:gravity="center_vertical" ns0:paddingHorizontal="16dp">
         <ImageButton ns0:layout_width="48dp" ns0:layout_height="48dp" ns0:gravity="center" ns0:contentDescription="@string/screen_favorites_contentdescription_2" ns0:onClick="goBack" ns0:src="@drawable/ic_back" ns0:background="@drawable/pill" ns0:padding="12dp" />
         <TextView style="@style/Subtitle" ns0:text="@string/screen_favorites_text_3" ns0:gravity="center" ns0:layout_weight="1" ns0:layout_width="0dp" ns0:layout_marginBottom="0dp" ns0:layout_marginTop="0dp" ns0:textSize="16sp" />
@@ -9,7 +9,7 @@
             <TextView style="@style/Title" ns0:text="@string/screen_favorites_text_7" />
             <LinearLayout ns0:id="@+id/saved_items" ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical">
                 <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/card" ns0:padding="10dp" ns0:layout_marginBottom="20dp" ns0:tag="detail" ns0:onClick="navigate" ns0:elevation="2dp" ns0:foreground="?attr/selectableItemBackground">
-                    <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="210dp" ns0:src="@drawable/house_modern" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_favorites_contentdescription_10" ns1:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
+                    <com.google.android.material.imageview.ShapeableImageView ns0:layout_width="match_parent" ns0:layout_height="210dp" ns0:src="@drawable/house_modern" ns0:scaleType="centerCrop" ns0:contentDescription="@string/screen_favorites_contentdescription_10" app:shapeAppearanceOverlay="@style/Photo" ns0:layout_marginBottom="12dp" />
                     <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/surface_sage" ns0:padding="14dp">
                         <TextView style="@style/Subtitle" ns0:text="@string/screen_favorites_text_12" ns0:layout_marginTop="4dp" ns0:layout_marginBottom="6dp" />
                         <TextView style="@style/Subtitle" ns0:text="@string/screen_favorites_text_11" ns0:textColor="@color/teal" ns0:textSize="17sp" ns0:layout_marginTop="0dp" />

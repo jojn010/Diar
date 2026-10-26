@@ -15,14 +15,14 @@
             <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_10" />
             <EditText ns0:id="@+id/full_name" style="@style/Field" ns0:hint="@string/screen_signup_hint_11" ns0:inputType="textPersonName" ns0:autofillHints="textPersonName" />
             <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_12" />
-            <EditText ns0:id="@+id/signup_phone" style="@style/Field" ns0:hint="@string/screen_signup_hint_13" ns0:inputType="phone" ns0:autofillHints="phone" />
+            <EditText ns0:id="@+id/signup_phone" style="@style/Field" ns0:hint="@string/screen_signup_hint_13" ns0:inputType="phone" ns0:autofillHints="phone" ns0:textDirection="ltr" ns0:gravity="start|center_vertical" />
             <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_14" />
-            <EditText ns0:id="@+id/email" style="@style/Field" ns0:hint="@string/screen_signup_hint_15" ns0:inputType="textEmailAddress" ns0:autofillHints="textEmailAddress" />
+            <EditText ns0:id="@+id/email" style="@style/Field" ns0:hint="@string/screen_signup_hint_15" ns0:inputType="textEmailAddress" ns0:autofillHints="textEmailAddress" ns0:textDirection="ltr" ns0:gravity="start|center_vertical" />
             <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_16" />
             <EditText ns0:id="@+id/password" style="@style/Field" ns0:hint="@string/screen_signup_hint_17" ns0:inputType="textPassword" ns0:autofillHints="textPassword" />
             <CheckBox ns0:id="@+id/terms" ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:text="@string/screen_signup_text_18" />
-            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_signup_text_19" ns0:id="@+id/signup_submit" />
-            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_signup_text_20" ns0:tag="login" ns0:onClick="navigate" />
+            <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_signup_text_19" ns0:id="@+id/signup_submit" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
+            <com.google.android.material.button.MaterialButton style="@style/TextAction" ns0:text="@string/screen_signup_text_20" ns0:tag="login" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

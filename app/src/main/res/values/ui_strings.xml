@@ -1,0 +1,25 @@
+<resources>
+    <string name="change_language">Language / العربية</string>
+    <string name="language_title">App language</string>
+    <string name="language_system">Use device language</string>
+    <string name="language_english">English</string>
+    <string name="language_arabic">العربية</string>
+    <string name="google_demo">Google sign-in will be connected later. Use Explore homes for now.</string>
+    <string name="facebook_demo">Facebook sign-in will be connected later. Use Explore homes for now.</string>
+    <string name="error_phone">Enter a valid phone number</string>
+    <string name="error_name">Enter your name</string>
+    <string name="error_email">Enter a valid email</string>
+    <string name="error_password">Use at least 6 characters</string>
+    <string name="accept_terms">Please accept the terms to continue</string>
+    <string name="home_saved">♥ Saved to favorites</string>
+    <string name="home_save">♡ Save this home</string>
+    <string name="favorites_empty">No saved homes yet. Explore a property and tap Save.</string>
+    <string name="notifications_cleared">You’re all caught up</string>
+    <string name="search_no_matches">No homes found. Try another city or property name.</string>
+    <string name="error_card_name">Enter a sample name</string>
+    <string name="error_card_number">Use 13–19 sample digits</string>
+    <string name="error_expiry">Use MM/YY</string>
+    <string name="error_cvc">Use 3 or 4 digits</string>
+    <string name="error_country">Enter a country</string>
+    <string name="message_added">Message added to this local demo conversation</string>
+</resources>
