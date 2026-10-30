@@ -1,3 +1,17 @@
+# Diar 1.2.3 — Arabic map accessibility
+
+The map zoom buttons previously retained English labels even when the app was in Arabic. Their accessible names and tooltips now follow the app language: **تكبير / تصغير** in Arabic and **Zoom in / Zoom out** in English. The map document also declares the selected language for assistive technology.
+
+Added an emulator regression that opens the real listing map in both languages and checks the zoom buttons’ accessible labels, tooltips and document language. The regression reproduced the English-label bug before the fix.
+
+Listing records/photos remain local, and map tiles still require internet. This APK is a debug-signed preview. No physical phone is updated by this scheduled run.
+
+Validation: debug build, five unit tests, all twelve Android 14 emulator tests,
+and lint (no errors) passed. English/Arabic and RTL listing workflows, local
+photo lifecycle, map wrapping and current-location regressions remain covered.
+
+---
+
 # Diar 1.2.2 — Reliable map pins after panning
 
 Fix a map-selection bug when the map displays repeated world copies: a tap could draw a new marker while leaving the confirmed location empty or unchanged. The app now normalizes the longitude before sending it to the saved-location form, while keeping the marker on the world copy that was tapped.

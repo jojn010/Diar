@@ -60,4 +60,6 @@
   <string name="price_negotiable">السعر قابل للتفاوض</string>
   <string name="negotiable_badge">قابل للتفاوض</string>
   <string name="price_fixed">سعر ثابت</string>
+  <string name="map_zoom_in">تكبير</string>
+  <string name="map_zoom_out">تصغير</string>
 </resources>

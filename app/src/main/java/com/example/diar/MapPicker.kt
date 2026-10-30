@@ -54,10 +54,14 @@ class MapPicker(private val activity: Activity) {
         }, "DiarPin")
         val css = activity.assets.open("leaflet.css").bufferedReader().use { it.readText() }
         val js = activity.assets.open("leaflet.js").bufferedReader().use { it.readText() }
-        val html = """<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><style>
+        val documentLanguage = activity.resources.configuration.locales[0].toLanguageTag()
+        val zoomInTitle = org.json.JSONObject.quote(activity.getString(R.string.map_zoom_in))
+        val zoomOutTitle = org.json.JSONObject.quote(activity.getString(R.string.map_zoom_out))
+        val html = """<!doctype html><html lang="$documentLanguage"><head><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><style>
             html,body,#map{height:100%;margin:0;background:#e0ebdd;} $css
             </style></head><body><div id="map"></div><script>$js</script><script>
-            const map=L.map('map').setView([$latStart,$lonStart],14);
+            const map=L.map('map',{zoomControl:false}).setView([$latStart,$lonStart],14);
+            L.control.zoom({zoomInTitle:$zoomInTitle,zoomOutTitle:$zoomOutTitle}).addTo(map);
             let pin=null;
             function choose(lat,lon){
               if(pin)map.removeLayer(pin);
