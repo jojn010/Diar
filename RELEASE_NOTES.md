@@ -1,3 +1,18 @@
+# Diar 1.2.1 — Clean up abandoned listing photos
+
+Leaving an unfinished listing through Back or navigation now deletes its unsaved photo instead of leaving unused images in private storage. Finishing the composer activity also discards the unsaved photo. Replacing a draft photo removes the previous unused selection.
+
+Photos remain intact when moving between composer steps or recreating the activity, and cleanup never deletes a photo referenced by a saved listing. Listings and photos remain device-local; no backend was added.
+
+The APK is a debug-signed preview. No physical phone is updated by this scheduled run.
+
+Validation: debug build, five unit tests and Android lint passed. All ten
+instrumented tests passed on the Android 14 emulator, including three new
+photo-lifecycle regressions and the existing English/Arabic, RTL, map, location,
+listing persistence, search, deletion and photo import tests.
+
+---
+
 # Diar 1.2.0 — Tell your home’s story
 
 - Replace the long listing form with three animated steps and a progress indicator.

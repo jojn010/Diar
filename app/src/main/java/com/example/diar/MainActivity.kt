@@ -69,14 +69,13 @@ class MainActivity : AppCompatActivity() {
                         show("my_property", false)
                     } else { file.delete(); toast(getString(R.string.listing_save_error)) }
                 } else {
-                    if (selectedPhoto.isNotEmpty()) File(filesDir, selectedPhoto).delete()
-                    selectedPhoto = file.name
-                    updatePhotoPreview()
+                    adoptDraftPhoto(file.name)
                 }
             } catch (_: Exception) { toast(getString(R.string.listing_photo_error)) }
         }
     }
     override fun onDestroy() {
+        if (isFinishing && current == "sell") discardPropertyDraft()
         mapPicker?.dismiss(); locationCancellation?.cancel(); locationHandler.removeCallbacksAndMessages(null)
         tone?.release(); tone = null; super.onDestroy()
     }
@@ -110,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (current == "sell" && composerStep > 0) { composer?.showStep(composerStep - 1); return }
+                if (current == "sell") discardPropertyDraft()
                 if (history.isNotEmpty()) show(history.removeAt(history.lastIndex), false) else finish()
             }
         })
@@ -127,9 +127,7 @@ class MainActivity : AppCompatActivity() {
         outState.putStringArrayList("messages", ArrayList(messages))
     }
     fun navigate(view: View) {
-        if (view.tag == "sell" && current != "sell") {
-            selectedPhoto = ""; composerStep = 0; propertyLatitude = null; propertyLongitude = null; propertyLocationSource = ""
-        }
+        if ((current == "sell" && view.tag != "sell") || (view.tag == "sell" && current != "sell")) discardPropertyDraft()
         show(view.tag.toString())
     }
     fun goBack(view: View) { onBackPressedDispatcher.onBackPressed() }
@@ -273,6 +271,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    internal fun adoptDraftPhoto(name: String) {
+        if (selectedPhoto != name) deleteDraftPhoto()
+        selectedPhoto = name
+        updatePhotoPreview()
+    }
+    private fun deleteDraftPhoto() {
+        if (selectedPhoto.isNotEmpty() && propertyStore.all().none { it.photo == selectedPhoto })
+            File(filesDir, selectedPhoto).delete()
+    }
+    private fun discardPropertyDraft() {
+        deleteDraftPhoto()
+        selectedPhoto = ""; composerStep = 0
+        propertyLatitude = null; propertyLongitude = null; propertyLocationSource = ""
     }
     private fun updatePhotoPreview() {
         findViewById<ImageView>(R.id.listing_photo_preview)?.let { image ->

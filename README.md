@@ -18,6 +18,8 @@ Choose **View my listings** to see only your own saved homes. Listings also appe
 
 There is no backend or database service. Property records are JSON in app-private preferences; selected photos are resized, camera orientation is applied, and JPEG copies are saved in app-private files. Original picker permissions are not needed to view saved photos later. Listings survive restarts and screen recreation. Older 1.1 listings remain readable without invented floor/type/location details. Device-local listing records and photos are excluded from Android cloud backup and device transfer. Uninstalling the app removes them.
 
+Leaving the composer through Back or navigation discards its unsaved photo; changing steps or recreating the activity keeps the active draft photo. Cleanup protects photos referenced by saved listings.
+
 A clearly labelled sample photo appears until a personal photo is selected. New listings are not published online. Authentication, social sign-in, checkout and remote messaging remain demonstrations; checkout does not charge or store card details. The original sample map screen remains an illustration.
 
 ## Map picker
