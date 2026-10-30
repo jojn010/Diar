@@ -61,7 +61,7 @@ class ArabicLanguageTest {
 
                 val screens = listOf("splash", "welcome", "signup", "login", "home", "listings",
                     "notifications", "tour", "discover", "search", "search_empty", "map", "chat",
-                    "detail", "payment", "success", "favorites", "account", "conversation", "screens")
+                    "detail", "payment", "success", "favorites", "account", "conversation", "screens", "sell", "my_listings")
                 for (name in screens) {
                     scenario.onActivity { activity ->
                         activity.navigate(View(activity).apply { tag = name })

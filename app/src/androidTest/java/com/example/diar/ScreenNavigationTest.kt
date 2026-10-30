@@ -18,7 +18,7 @@ class ScreenNavigationTest {
         val activity = instrumentation.startActivitySync(intent) as MainActivity
         val names = listOf("splash", "welcome", "signup", "login", "home", "listings",
             "notifications", "tour", "discover", "search", "search_empty", "map", "chat",
-            "detail", "payment", "success", "favorites", "account", "conversation", "screens")
+            "detail", "payment", "success", "favorites", "account", "conversation", "screens", "sell", "my_listings")
         names.forEach { name ->
             instrumentation.runOnMainSync {
                 activity.navigate(View(activity).apply { tag = name })

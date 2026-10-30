@@ -1,3 +1,22 @@
+# Diar 1.2.0 — Tell your home’s story
+
+- Replace the long listing form with three animated steps and a progress indicator.
+- Choose sale or rent, apartment / house with a backyard / villa, and one / two / three-or-more floors.
+- Enter one whole-number USD price and optionally check **Price is negotiable**. Rental prices are clearly monthly. No min/max controls.
+- Choose the device’s current location with an on-demand permission request, or select another place on an interactive map. Save and refine the pin; coordinate entry remains available if map tiles cannot load.
+- Add **My listings**, accessible from Home, Listings and Account.
+- Save or replace a real property photo locally; resize and apply camera orientation.
+- Keep existing listings readable, restore new drafts after recreation, and exclude local listing records/photos from Android backup and device transfer.
+- Translate all new controls, validation and details into English and Arabic with RTL support.
+
+All listing records and photos remain on this device. There is no backend/database or online publication. Map tiles require internet and use OpenStreetMap with bundled Leaflet. APK is debug-signed for preview use.
+
+Validation: debug build succeeded; 5 unit tests and all 7 instrumented tests passed
+on an isolated Android 14 emulator. Android lint completed with no errors.
+English/Arabic composer and map screenshots were visually reviewed.
+
+---
+
 # Diar 1.1.1 — Branded launcher icon
 
 Replace the default Android robot with a Diar monogram inspired by the existing brand: teal dome, doorway and olive branch on cream.

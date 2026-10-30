@@ -2,7 +2,6 @@ package com.example.diar
 
 import android.os.Bundle
 import android.animation.ValueAnimator
-import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.ToneGenerator
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,7 +26,7 @@ import androidx.core.widget.doAfterTextChanged
 /** Offline UI prototype: no authentication, payment or messaging service is contacted. */
 class MainActivity : AppCompatActivity() {
     private val screens = mapOf(
-        "sell" to R.layout.screen_sell, "my_property" to R.layout.screen_my_property,
+        "my_listings" to R.layout.screen_my_listings, "sell" to R.layout.screen_sell, "my_property" to R.layout.screen_my_property,
         "splash" to R.layout.screen_splash, "welcome" to R.layout.screen_welcome,
         "signup" to R.layout.screen_signup, "login" to R.layout.screen_login,
         "home" to R.layout.screen_home, "listings" to R.layout.screen_listings,
@@ -47,28 +46,49 @@ class MainActivity : AppCompatActivity() {
     private var selectedProperty: String? = null
     private var selectedPhoto = ""
     private var tone: ToneGenerator? = null
+    private var composer: HomeComposer? = null
+    private var composerStep = 0
+    private var propertyLatitude: Double? = null
+    private var propertyLongitude: Double? = null
+    private var propertyLocationSource = ""
+    private var mapPicker: MapPicker? = null
+    private var locationCancellation: androidx.core.os.CancellationSignal? = null
+    private val locationHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val locationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted && current == "sell") requestDeviceLocation()
+        else if (current == "sell") toast(getString(R.string.location_denied))
+    }
     private val photoPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             try {
-                // Decode bounds first to reject non-images and sample large camera photos safely.
-                val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                contentResolver.openInputStream(uri).use { BitmapFactory.decodeStream(it, null, bounds) }
-                require(bounds.outWidth > 0 && bounds.outHeight > 0)
-                val options = BitmapFactory.Options().apply {
-                    inSampleSize = 1
-                    while (bounds.outWidth / inSampleSize > 1600 || bounds.outHeight / inSampleSize > 1600) inSampleSize *= 2
+                val file = PropertyPhotos(this).import(uri)
+                if (current == "my_property") {
+                    val property = propertyStore.all().find { it.id == selectedProperty }
+                    if (property != null && propertyStore.save(property.copy(photo = file.name))) {
+                        if (property.photo.isNotEmpty()) File(filesDir, property.photo).delete()
+                        show("my_property", false)
+                    } else { file.delete(); toast(getString(R.string.listing_save_error)) }
+                } else {
+                    if (selectedPhoto.isNotEmpty()) File(filesDir, selectedPhoto).delete()
+                    selectedPhoto = file.name
+                    updatePhotoPreview()
                 }
-                val bitmap = contentResolver.openInputStream(uri).use { BitmapFactory.decodeStream(it, null, options) }
-                    ?: error("Invalid image")
-                val file = File(filesDir, "property_${UUID.randomUUID()}.jpg")
-                try { file.outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 88, it) } }
-                finally { bitmap.recycle() }
-                selectedPhoto = file.name
-                updatePhotoPreview()
             } catch (_: Exception) { toast(getString(R.string.listing_photo_error)) }
         }
     }
-    override fun onDestroy() { tone?.release(); tone = null; super.onDestroy() }
+    override fun onDestroy() {
+        mapPicker?.dismiss(); locationCancellation?.cancel(); locationHandler.removeCallbacksAndMessages(null)
+        tone?.release(); tone = null; super.onDestroy()
+    }
+    override fun onStop() {
+        super.onStop(); locationCancellation?.cancel(); locationCancellation = null
+        if (current == "sell") updatePinStatus()
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        composer?.updatePrice()
+        if (current == "sell") updatePinStatus()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -78,6 +98,10 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
+        composerStep = savedInstanceState?.getInt("composerStep") ?: 0
+        propertyLatitude = savedInstanceState?.takeIf { it.containsKey("propertyLatitude") }?.getDouble("propertyLatitude")
+        propertyLongitude = savedInstanceState?.takeIf { it.containsKey("propertyLongitude") }?.getDouble("propertyLongitude")
+        propertyLocationSource = savedInstanceState?.getString("propertyLocationSource") ?: ""
         selectedProperty = savedInstanceState?.getString("selectedProperty")
         selectedPhoto = savedInstanceState?.getString("selectedPhoto") ?: ""
         history.addAll(savedInstanceState?.getStringArrayList("history") ?: emptyList())
@@ -85,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         show(savedInstanceState?.getString("screen") ?: "splash", false)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                if (current == "sell" && composerStep > 0) { composer?.showStep(composerStep - 1); return }
                 if (history.isNotEmpty()) show(history.removeAt(history.lastIndex), false) else finish()
             }
         })
@@ -92,13 +117,19 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("screen", current)
+        outState.putInt("composerStep", composerStep)
+        propertyLatitude?.let { outState.putDouble("propertyLatitude", it) }
+        propertyLongitude?.let { outState.putDouble("propertyLongitude", it) }
+        outState.putString("propertyLocationSource", propertyLocationSource)
         outState.putString("selectedProperty", selectedProperty)
         outState.putString("selectedPhoto", selectedPhoto)
         outState.putStringArrayList("history", ArrayList(history))
         outState.putStringArrayList("messages", ArrayList(messages))
     }
     fun navigate(view: View) {
-        if (view.tag == "sell" && current != "sell") selectedPhoto = ""
+        if (view.tag == "sell" && current != "sell") {
+            selectedPhoto = ""; composerStep = 0; propertyLatitude = null; propertyLongitude = null; propertyLocationSource = ""
+        }
         show(view.tag.toString())
     }
     fun goBack(view: View) { onBackPressedDispatcher.onBackPressed() }
@@ -107,6 +138,8 @@ class MainActivity : AppCompatActivity() {
         val host = findViewById<FrameLayout>(R.id.main)
         (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(host.windowToken, 0)
         if (push && destination != current) history.add(current)
+        locationCancellation?.cancel(); locationCancellation = null
+        composer = null
         current = destination
         host.removeAllViews()
         layoutInflater.inflate(layout, host, true)
@@ -271,8 +304,17 @@ class MainActivity : AppCompatActivity() {
         })
         if (property.photo.isEmpty()) text(parent, getString(R.string.listing_sample), 12f)
     }
-    private fun propertyPrice(property: Property) = getString(R.string.listing_price_value,
-        NumberFormat.getNumberInstance(resources.configuration.locales[0]).format(property.price.toBigDecimal()))
+    private fun propertyPrice(property: Property): String {
+        val format = NumberFormat.getNumberInstance(resources.configuration.locales[0])
+        val high = format.format(property.price.toBigDecimal())
+        val amount = getString(R.string.listing_price_value, high)
+        return if (property.purpose == "rent") getString(R.string.rent_range, amount) else amount
+    }
+    private fun propertyAttributes(property: Property): String {
+        val type = when (property.type) { "apartment" -> R.string.type_apartment; "house" -> R.string.type_house; "villa" -> R.string.type_villa; else -> null }
+        val floors = when (property.floors) { 1 -> R.string.floor_one; 2 -> R.string.floor_two; 3 -> R.string.floor_more; else -> null }
+        return listOfNotNull(type?.let { getString(it) }, floors?.let { getString(it) }).joinToString(" · ")
+    }
     private fun propertyArea(property: Property) = getString(R.string.listing_area_value,
         NumberFormat.getNumberInstance(resources.configuration.locales[0]).format(property.area.toBigDecimal()))
     private fun bindProperties() {
@@ -280,12 +322,17 @@ class MainActivity : AppCompatActivity() {
             isChecked = prefs.getBoolean("sound", false)
             setOnCheckedChangeListener { _, checked -> prefs.edit().putBoolean("sound", checked).apply() }
         }
+        click(R.id.collection_add) { navigate(View(this).apply { tag = "sell" }) }
         if (current == "sell") {
-            listOf(R.id.property_title, R.id.property_location, R.id.property_area,
-                R.id.property_price, R.id.property_description).forEach { id ->
-                findViewById<EditText>(id).apply { doAfterTextChanged { error = null } }
-            }
+            composer = HomeComposer(this, composerStep, { composerStep = it }, { animateEntrance(it) })
             updatePhotoPreview()
+            updatePinStatus()
+            click(R.id.use_current_location) {
+                if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == android.content.pm.PackageManager.PERMISSION_GRANTED)
+                    requestDeviceLocation()
+                else locationPermission.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            }
+            click(R.id.choose_map_location) { openPropertyMap() }
             click(R.id.listing_choose_photo) { photoPicker.launch(arrayOf("image/*")) }
             click(R.id.listing_submit) { saveProperty() }
         }
@@ -305,7 +352,10 @@ class MainActivity : AppCompatActivity() {
                 photo(card, property, 180)
                 text(card, property.title, 22f)
                 text(card, propertyPrice(property), 20f)
+                text(card, getString(if (property.negotiable) R.string.negotiable_badge else R.string.price_fixed), 13f)
+                text(card, getString(if (property.purpose == "rent") R.string.purpose_rent else R.string.purpose_sale), 13f)
                 text(card, property.location + " · " + propertyArea(property))
+                if (propertyAttributes(property).isNotBlank()) text(card, propertyAttributes(property), 14f)
                 parent.addView(card)
             }
         }
@@ -313,11 +363,24 @@ class MainActivity : AppCompatActivity() {
             val property = propertyStore.all().find { it.id == selectedProperty }
             if (property == null) { text(parent, getString(R.string.listing_empty)); return@let }
             photo(parent, property, 260)
-            text(parent, getString(R.string.listing_for_sale), 12f)
+            text(parent, getString(if (property.purpose == "rent") R.string.listing_for_rent else R.string.listing_for_sale), 12f)
             text(parent, property.title, 30f)
             text(parent, propertyPrice(property), 26f)
+            text(parent, getString(if (property.negotiable) R.string.negotiable_badge else R.string.price_fixed), 14f)
             text(parent, property.location, 20f)
             text(parent, propertyArea(property), 20f)
+            if (propertyAttributes(property).isNotBlank()) text(parent, propertyAttributes(property), 18f)
+            if (property.latitude != null && property.longitude != null) {
+                text(parent, pinLabel(property.latitude, property.longitude), 14f)
+                button(parent, R.string.location_details) {
+                    mapPicker = MapPicker(this).also { it.show(property.latitude, property.longitude) { lat, lon ->
+                        if (propertyStore.save(property.copy(latitude = lat, longitude = lon, locationSource = "map")))
+                            show("my_property", false)
+                        else toast(getString(R.string.listing_save_error))
+                    } }
+                }
+            }
+            button(parent, R.string.listing_photo) { photoPicker.launch(arrayOf("image/*")) }
             if (property.description.isNotBlank()) text(parent, property.description)
             text(parent, getString(R.string.listing_local), 13f)
             button(parent, R.string.listing_remove) {
@@ -326,22 +389,22 @@ class MainActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.listing_remove) { _, _ ->
                         if (propertyStore.delete(property.id)) {
                             if (property.photo.isNotEmpty()) File(filesDir, property.photo).delete()
-                            show("listings")
-                        }
+                            show("my_listings")
+                        } else toast(getString(R.string.listing_save_error))
                     }.show()
             }
         }
     }
     private fun saveProperty() {
-        for (id in listOf(R.id.property_title, R.id.property_location)) {
-            if (!valid(id, value(id).isNotBlank(), getString(R.string.listing_required))) return
-        }
-        val area = PropertyStore.number(value(R.id.property_area))
-        val price = PropertyStore.number(value(R.id.property_price))
-        if (!valid(R.id.property_area, area != null, getString(R.string.listing_invalid))) return
-        if (!valid(R.id.property_price, price != null, getString(R.string.listing_invalid))) return
+        if (composer?.validateAll() != true) return
         val property = Property(UUID.randomUUID().toString(), value(R.id.property_title), value(R.id.property_location),
-            area!!.toPlainString(), price!!.toPlainString(), value(R.id.property_description), selectedPhoto)
+            PropertyStore.number(value(R.id.property_area))!!.toPlainString(),
+            PropertyStore.integer(value(R.id.property_price))!!.toString(), value(R.id.property_description), selectedPhoto,
+            negotiable = findViewById<CheckBox>(R.id.property_negotiable).isChecked,
+            purpose = if (composer?.choice(R.id.property_purpose) == R.id.purpose_rent) "rent" else "sale",
+            type = when (composer?.choice(R.id.property_type)) { R.id.type_house -> "house"; R.id.type_villa -> "villa"; else -> "apartment" },
+            floors = when (composer?.choice(R.id.property_floors)) { R.id.floor_two -> 2; R.id.floor_more -> 3; else -> 1 },
+            latitude = propertyLatitude, longitude = propertyLongitude, locationSource = propertyLocationSource)
         if (!propertyStore.save(property)) { toast(getString(R.string.listing_save_error)); return }
         selectedProperty = property.id
         selectedPhoto = ""
@@ -353,9 +416,65 @@ class MainActivity : AppCompatActivity() {
         }
         // Back returns to the collection rather than the already submitted form.
         history.removeAll { it == "sell" || it == "my_property" }
-        if (history.lastOrNull() != "listings") history.add("listings")
+        if (history.lastOrNull() != "my_listings") history.add("my_listings")
         show("my_property", false)
         toast(getString(R.string.listing_created))
+    }
+    fun hasPropertyPin() = propertyLatitude != null && propertyLongitude != null
+    private fun pinLabel(latitude: Double, longitude: Double): String {
+        val format = NumberFormat.getNumberInstance(resources.configuration.locales[0]).apply { maximumFractionDigits = 5 }
+        return getString(R.string.location_pin, format.format(latitude), format.format(longitude))
+    }
+    private fun updatePinStatus() {
+        findViewById<TextView>(R.id.location_status)?.text = if (hasPropertyPin())
+            pinLabel(propertyLatitude!!, propertyLongitude!!) else getString(R.string.location_none)
+    }
+    private fun openPropertyMap() {
+        locationCancellation?.cancel(); locationCancellation = null
+        mapPicker = MapPicker(this).also { it.show(propertyLatitude, propertyLongitude) { lat, lon ->
+            propertyLatitude = lat; propertyLongitude = lon; propertyLocationSource = "map"; updatePinStatus()
+        } }
+    }
+    @android.annotation.SuppressLint("MissingPermission")
+    private fun requestDeviceLocation() {
+        val manager = getSystemService(LOCATION_SERVICE) as android.location.LocationManager
+        val providers = listOf(android.location.LocationManager.NETWORK_PROVIDER, android.location.LocationManager.GPS_PROVIDER)
+            .filter { manager.isProviderEnabled(it) }
+        if (providers.isEmpty()) { toast(getString(R.string.location_unavailable)); return }
+        locationCancellation?.cancel()
+        val cancellation = androidx.core.os.CancellationSignal()
+        val children = providers.map { androidx.core.os.CancellationSignal() }
+        cancellation.setOnCancelListener { children.forEach { it.cancel() } }
+        locationCancellation = cancellation
+        findViewById<TextView>(R.id.location_status)?.setText(R.string.location_wait)
+        var pending = providers.size
+        val timeout = Runnable {
+            if (locationCancellation === cancellation) {
+                locationCancellation = null; cancellation.cancel()
+                if (current == "sell") { updatePinStatus(); toast(getString(R.string.location_unavailable)) }
+            }
+        }
+        locationHandler.postDelayed(timeout, 20000)
+        fun result(location: android.location.Location?) {
+            if (locationCancellation !== cancellation || current != "sell") return
+            pending--
+            if (location != null && MapPicker.validCoordinates(location.latitude, location.longitude)) {
+                locationCancellation = null; locationHandler.removeCallbacks(timeout); cancellation.cancel()
+                propertyLatitude = location.latitude; propertyLongitude = location.longitude; propertyLocationSource = "current"
+                updatePinStatus(); toast(getString(R.string.location_approximate))
+            } else if (pending == 0) {
+                locationCancellation = null; locationHandler.removeCallbacks(timeout); cancellation.cancel()
+                updatePinStatus(); toast(getString(R.string.location_unavailable))
+            }
+        }
+        providers.forEachIndexed { index, provider ->
+            if (locationCancellation === cancellation) {
+                try {
+                    androidx.core.location.LocationManagerCompat.getCurrentLocation(manager, provider, children[index],
+                        androidx.core.content.ContextCompat.getMainExecutor(this)) { result(it) }
+                } catch (_: Exception) { result(null) }
+            }
+        }
     }
     private fun addMessage(message: String) {
         findViewById<LinearLayout>(R.id.messages).addView(TextView(this).apply {
