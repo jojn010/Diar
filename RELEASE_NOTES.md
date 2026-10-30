@@ -1,3 +1,13 @@
+# Diar 1.1.1 — Branded launcher icon
+
+Replace the default Android robot with a Diar monogram inspired by the existing brand: teal dome, doorway and olive branch on cream.
+
+Includes adaptive icons, Android themed-icon support, and standard/round legacy icons at all launcher densities. Retains the existing in-app Diar wordmark and all 1.1 listing features.
+
+Validation: debug APK builds successfully; icon artwork reviewed visually. This APK is a debug-signed offline preview. Listings stay on the device.
+
+---
+
 # Diar 1.1.0 — Homes with a story
 
 - Create a home listing with a title, area (m²), asking price (USD), location and optional description.
