@@ -62,7 +62,9 @@ class MapPicker(private val activity: Activity) {
             function choose(lat,lon){
               if(pin)map.removeLayer(pin);
               pin=L.circleMarker([lat,lon],{radius:10,color:'#195D60',weight:4,fillColor:'#EBC46D',fillOpacity:1}).addTo(map);
-              DiarPin.select(lat,lon);
+              // Keep the marker on the tapped world copy, but store canonical coordinates.
+              const wrapped=L.latLng(lat,lon).wrap();
+              DiarPin.select(wrapped.lat,wrapped.lng);
             }
             const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
               attribution:'&copy; OpenStreetMap contributors'}).addTo(map);

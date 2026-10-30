@@ -47,7 +47,7 @@ class PropertyFlowTest {
                     if (ready) break
                 }
                 check(ready) { "Bundled map did not initialize" }
-                (view as WebView).evaluateJavascript("choose(31.77,35.21)", null)
+                (view as WebView).evaluateJavascript("map.fire('click',{latlng:L.latLng(31.77,35.21)})", null)
                 ui.loopMainThreadForAtLeast(300)
             }
         })

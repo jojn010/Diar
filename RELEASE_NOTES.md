@@ -1,3 +1,17 @@
+# Diar 1.2.2 — Reliable map pins after panning
+
+Fix a map-selection bug when the map displays repeated world copies: a tap could draw a new marker while leaving the confirmed location empty or unchanged. The app now normalizes the longitude before sending it to the saved-location form, while keeping the marker on the world copy that was tapped.
+
+Added a regression test for eastward, westward and ordinary map clicks, checking both the displayed marker and the confirmed coordinates. The existing bilingual listing test now uses the real map click handler rather than calling the marker helper directly.
+
+Listing data and photos remain local. This is a debug-signed preview APK; this scheduled run does not update a physical phone.
+
+Validation: reproduced the bug with a failing emulator test before the fix.
+After the fix, the debug build, five unit tests, Android lint (no errors), and
+all eleven instrumented tests passed on the Android 14 emulator.
+
+---
+
 # Diar 1.2.1 — Clean up abandoned listing photos
 
 Leaving an unfinished listing through Back or navigation now deletes its unsaved photo instead of leaving unused images in private storage. Finishing the composer activity also discards the unsaved photo. Replacing a draft photo removes the previous unused selection.
