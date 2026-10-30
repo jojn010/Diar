@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="sell_title">List your home</string>
+  <string name="sell_intro">A new chapter starts here.</string>
+  <string name="sell_caption">Add the details, choose a photo, and bring your property to life.</string>
+  <string name="listing_name">Property title</string>
+  <string name="listing_location">City / neighborhood</string>
+  <string name="listing_size">Area (m²)</string>
+  <string name="listing_price">Asking price (USD)</string>
+  <string name="listing_description">Description (optional)</string>
+  <string name="listing_photo">Choose a property photo</string>
+  <string name="listing_publish">Save listing</string>
+  <string name="listing_local">Saved on this device. Listings are not published to an online marketplace.</string>
+  <string name="listing_invalid">Enter a value greater than zero (up to 1 billion).</string>
+  <string name="listing_required">Please fill in this field.</string>
+  <string name="listing_created">Your home is ready to explore</string>
+  <string name="your_listings">Your listings</string>
+  <string name="listing_details">Property details</string>
+  <string name="listing_remove">Delete listing</string>
+  <string name="listing_delete_confirm">Delete this listing from this device?</string>
+  <string name="listing_cancel">Cancel</string>
+  <string name="listing_photo_error">Could not open this photo. Please choose another image.</string>
+  <string name="listing_photo_chosen">Photo added</string>
+  <string name="listing_area_value">%1$s m²</string>
+  <string name="listing_price_value">US$ %1$s</string>
+  <string name="listing_sound">Sound feedback</string>
+  <string name="listing_sound_hint">Optional gentle sound when saving a listing</string>
+  <string name="listing_empty">Your next chapter belongs here. Add your first home.</string>
+  <string name="listing_saved_count">Saved listings: %1$d</string>
+  <string name="listing_for_sale">FOR SALE · YOUR PROPERTY</string>
+  <string name="listing_sample">Sample photo · choose your own</string>
+  <string name="listing_saved_badge">Saved on this device</string>
+<string name="listing_save_error">Could not save the listing. Please try again.</string></resources>

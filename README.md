@@ -23,3 +23,33 @@ The visual system pairs Diar teal with sage, warm cream, peach/terracotta and ho
 Property photos: Unsplash image IDs `photo-1600596542815-ffad4c1539a9`, `photo-1600585154340-be6161a56a0c`, and `photo-1600047509807-ba8f99d2cdde`.
 
 Build with `gradlew.bat assembleDebug`; run checks with `gradlew.bat lintDebug connectedDebugAndroidTest` with an emulator/device connected.
+
+## Version 1.1 — presentation update
+
+Choose **List your home** from Home, Listings or Account. Enter a title, location,
+area in square metres and price in USD, optionally add a description and select a
+photo using the Android document picker, then save. English, Arabic and Persian
+digits are accepted for area/price (maximum two decimal places, positive values up
+to one billion). The app copies a resized photo into private storage, so the saved
+listing does not depend on an external image permission remaining available.
+
+Your listings appear on Home and Listings and can be found through Search. Tap a
+listing to view its details or delete it with confirmation. Listings and photos
+persist across app restarts; uninstalling the app removes device-local data.
+A sample photo is explicitly labelled when no personal photo is selected.
+These listings are **saved locally, not published to an online marketplace**.
+
+Screen entrances use a fade, lift and staggered reveal; saving a favorite has
+press feedback. Animations respect the system animator setting. Account offers
+optional sound feedback for saving a listing; it is off by default.
+
+Open this checkout in Android Studio:
+`/home/jojn10/Documents/ChatGPT/diar`. The Gradle project is at the repository root.
+Run `./tools/check_app.sh` to build, lint, run unit tests and test a connected
+Android emulator. The script explicitly selects an `emulator-*` device and skips
+instrumented tests with a clear message if none is running. It does not install
+onto a physical phone. Android SDK path belongs in untracked `local.properties`.
+
+The GitHub preview APK is debug-signed for easy installation and demonstration.
+It is not a Play Store production build. Production signing credentials are not
+included in this repository.

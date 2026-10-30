@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="sell_title">أضف عقارك للبيع</string>
+  <string name="sell_intro">هنا تبدأ حكاية جديدة.</string>
+  <string name="sell_caption">أضف التفاصيل واختر صورة لعرض عقارك بأجمل شكل.</string>
+  <string name="listing_name">عنوان العقار</string>
+  <string name="listing_location">المدينة / الحي</string>
+  <string name="listing_size">المساحة (م²)</string>
+  <string name="listing_price">السعر المطلوب (دولار أمريكي)</string>
+  <string name="listing_description">الوصف (اختياري)</string>
+  <string name="listing_photo">اختر صورة للعقار</string>
+  <string name="listing_publish">حفظ الإعلان</string>
+  <string name="listing_local">يُحفظ الإعلان على هذا الجهاز فقط، ولا يُنشر في سوق عقاري على الإنترنت.</string>
+  <string name="listing_invalid">أدخل قيمة أكبر من صفر (حتى مليار).</string>
+  <string name="listing_required">يرجى تعبئة هذا الحقل.</string>
+  <string name="listing_created">عقارك جاهز للاستعراض</string>
+  <string name="your_listings">عقاراتك</string>
+  <string name="listing_details">تفاصيل العقار</string>
+  <string name="listing_remove">حذف الإعلان</string>
+  <string name="listing_delete_confirm">هل تريد حذف هذا الإعلان من الجهاز؟</string>
+  <string name="listing_cancel">إلغاء</string>
+  <string name="listing_photo_error">تعذّر فتح الصورة. يرجى اختيار صورة أخرى.</string>
+  <string name="listing_photo_chosen">تمت إضافة الصورة</string>
+  <string name="listing_area_value">%1$s م²</string>
+  <string name="listing_price_value">%1$s دولار أمريكي</string>
+  <string name="listing_sound">المؤثرات الصوتية</string>
+  <string name="listing_sound_hint">صوت خفيف اختياري عند حفظ الإعلان</string>
+  <string name="listing_empty">حكايتك الجديدة تبدأ هنا. أضف عقارك الأول.</string>
+  <string name="listing_saved_count">عدد الإعلانات المحفوظة: %1$d</string>
+  <string name="listing_for_sale">للبيع · عقارك</string>
+  <string name="listing_sample">صورة توضيحية · اختر صورتك</string>
+  <string name="listing_saved_badge">محفوظ على هذا الجهاز</string>
+<string name="listing_save_error">تعذّر حفظ الإعلان. يرجى المحاولة مجدداً.</string></resources>

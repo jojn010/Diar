@@ -6,7 +6,8 @@
     </LinearLayout>
     <ScrollView ns0:layout_width="match_parent" ns0:layout_height="0dp" ns0:layout_weight="1" ns0:fillViewport="true" ns0:scrollbars="none">
         <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
-            <TextView style="@style/Title" ns0:text="@string/screen_listings_text_7" />
+            <com.google.android.material.button.MaterialButton style="@style/Gold" ns0:text="@string/sell_title" ns0:tag="sell" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:layout_marginBottom="16dp" /><LinearLayout ns0:id="@+id/own_listings" ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" />
+<TextView style="@style/Title" ns0:text="@string/screen_listings_text_7" />
             <TextView style="@style/Muted" ns0:text="@string/screen_listings_text_8" />
             <com.google.android.material.button.MaterialButton style="@style/Secondary" ns0:text="@string/screen_listings_text_9" ns0:tag="search" ns0:onClick="navigate" app:icon="@drawable/ic_search" app:iconTint="@color/teal" app:iconGravity="textStart" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
             <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/card" ns0:padding="10dp" ns0:layout_marginBottom="20dp" ns0:tag="detail" ns0:onClick="navigate" ns0:elevation="2dp" ns0:foreground="?attr/selectableItemBackground">
