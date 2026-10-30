@@ -11,6 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import org.junit.Assert.*
 import org.junit.Test
@@ -33,7 +34,7 @@ class PropertyFlowTest {
         // Exercise the real bundled map JavaScript -> native pin bridge, including invalid input.
         onView(withId(R.id.map_latitude)).perform(replaceText("95"), closeSoftKeyboard())
         onView(withId(R.id.map_longitude)).perform(replaceText("35"), closeSoftKeyboard())
-        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click())
         onView(withId(R.id.map_latitude)).check(matches(hasErrorText(
             InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.map_invalid))))
         onView(withId(R.id.location_web_map)).perform(object : androidx.test.espresso.ViewAction {
@@ -53,7 +54,7 @@ class PropertyFlowTest {
         })
         onView(withId(R.id.map_latitude)).check(matches(withText("31.770000")))
         screenshot("map-picker")
-        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click())
     }
     @Test fun createValidatePersistSearchAndDeleteBothLanguages() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -144,7 +145,7 @@ class PropertyFlowTest {
                         val content = a.findViewById<LinearLayout>(R.id.property_content)
                         content.getChildAt(content.childCount - 1).performClick()
                     }
-                    onView(withId(android.R.id.button1)).perform(click())
+                    onView(withId(android.R.id.button1)).inRoot(isDialog()).perform(click())
                     assertEquals(originalIds, store.all().map { it.id }.toSet())
                 }
             } finally {
