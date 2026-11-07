@@ -318,4 +318,6 @@
 <string name="listing_view_map">فتح الموقع في الخرائط</string>
 <string name="listing_map_app_missing">لا يوجد تطبيق خرائط مثبّت على هذا الجهاز.</string>
 <string name="listing_owner_tools">إدارة إعلانك</string>
+<string name="sample_listing_label">إعلان تجريبي</string>
+<string name="card_sample_photo">صورة توضيحية</string>
 </resources>

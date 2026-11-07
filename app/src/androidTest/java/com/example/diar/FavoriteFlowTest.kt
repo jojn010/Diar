@@ -22,7 +22,7 @@ class FavoriteFlowTest {
         else -> emptyList()
     }
     @Test fun savedListingsSurviveRecreationOpenTheSameDetailsAndCanBeRemovedInBothLanguages() {
-        val property = Property(UUID.randomUUID().toString(), "Favorite QA ${UUID.randomUUID()}", "QA location", "120", "250000", "", "",
+        val property = Property(UUID.randomUUID().toString(), "Courtyard QA home", "QA location", "120", "250000", "", "",
             latitude = 0.0, longitude = 0.0, locationSource = "map")
         val store = PropertyStore(context)
         val favorites = FavoriteStore(context, "offline")
@@ -41,9 +41,23 @@ class FavoriteFlowTest {
                     }
                     check(applied)
                     scenario.recreate()
+                    scenario.onActivity { a -> a.navigate(View(a).apply { tag = "home" }) }
+                    InstrumentationRegistry.getInstrumentation().waitForIdleSync()
                     scenario.onActivity { a ->
-                        a.navigate(View(a).apply { tag = "home" })
                         val title = texts(a.findViewById(R.id.own_listings)).single { it.text.toString() == property.title }
+                        if (InstrumentationRegistry.getArguments().getString("diarScreenshots") == "true") {
+                            val real = (title.parent as View).parent as View
+                            val sample = a.findViewById<View>(R.id.sample_card_home_0)
+                            assertEquals(sample.findViewById<View>(R.id.card_photo).height, real.findViewById<View>(R.id.card_photo).height)
+                            for ((name, view) in listOf("real" to real, "sample" to sample)) {
+                                val bitmap = android.graphics.Bitmap.createBitmap(view.width, view.height, android.graphics.Bitmap.Config.ARGB_8888)
+                                view.draw(android.graphics.Canvas(bitmap))
+                                java.io.File(a.getExternalFilesDir(null), "card-$name-$language.png").outputStream().use {
+                                    bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
+                                }
+                                bitmap.recycle()
+                            }
+                        }
                         (title.parent as View).performClick()
                         a.findViewById<View>(R.id.property_favorite).performClick()
                         assertTrue(favorites.contains(property.id))

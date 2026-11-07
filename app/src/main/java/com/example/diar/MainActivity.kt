@@ -195,6 +195,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun bind() {
         findViewById<TextView>(R.id.app_version)?.text = getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
+        bindSampleCards()
         bindProperties()
         bindCloudControls()
         click(R.id.change_language) { chooseLanguage() }
@@ -396,26 +397,66 @@ class MainActivity : AppCompatActivity() {
             parent.addView(this)
         }
     }
+    private fun bindSampleCards() {
+        bindSampleCard(R.id.sample_card_discover_0, R.drawable.house_garden, R.string.screen_discover_text_14, R.string.screen_discover_text_13, R.string.screen_discover_text_15)
+        bindSampleCard(R.id.sample_card_favorites_0, R.drawable.house_modern, R.string.screen_favorites_text_12, R.string.screen_favorites_text_11, R.string.screen_favorites_text_13)
+        bindSampleCard(R.id.sample_card_home_0, R.drawable.house_modern, R.string.screen_home_text_12, R.string.screen_home_text_11, R.string.screen_home_text_13)
+        bindSampleCard(R.id.sample_card_home_1, R.drawable.house_villa, R.string.screen_home_text_17, R.string.screen_home_text_16, R.string.screen_home_text_18)
+        bindSampleCard(R.id.sample_card_listings_0, R.drawable.house_modern, R.string.screen_listings_text_13, R.string.screen_listings_text_12, R.string.screen_listings_text_14)
+        bindSampleCard(R.id.sample_card_listings_1, R.drawable.house_villa, R.string.screen_listings_text_18, R.string.screen_listings_text_17, R.string.screen_listings_text_19)
+        bindSampleCard(R.id.sample_card_listings_2, R.drawable.house_garden, R.string.screen_listings_text_23, R.string.screen_listings_text_22, R.string.screen_listings_text_24)
+    }
+    private fun bindSampleCard(id: Int, image: Int, title: Int, price: Int, metadata: Int) {
+        val card = findViewById<View>(id) ?: return
+        card.findViewById<ImageView>(R.id.card_photo).apply { setImageResource(image); contentDescription = getString(title) }
+        card.findViewById<TextView>(R.id.card_kind).setText(R.string.sample_listing_label)
+        card.findViewById<TextView>(R.id.card_title).setText(title)
+        card.findViewById<TextView>(R.id.card_price).setText(price)
+        card.findViewById<TextView>(R.id.card_metadata).setText(metadata)
+        card.findViewById<View>(R.id.card_info).setOnClickListener { card.performClick() }
+        val heart = card.findViewById<ImageButton>(R.id.card_favorite)
+        fun update() {
+            val saved = prefs.getBoolean("saved", false)
+            heart.isSelected = saved; heart.imageAlpha = if (saved) 255 else 140
+            heart.contentDescription = getString(if (saved) R.string.favorite_remove else R.string.home_save) + " · " + getString(title)
+        }
+        update()
+        heart.setOnClickListener {
+            prefs.edit().putBoolean("saved", !prefs.getBoolean("saved", false)).apply()
+            if (current == "favorites") show("favorites", false) else bindSampleCards()
+        }
+    }
     private fun listingCard(parent: LinearLayout, property: Property, allowRemove: Boolean = false) {
-        val card = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL; setPadding(dp(12), dp(12), dp(12), dp(16))
-            setBackgroundResource(R.drawable.card)
-            layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) }
-            isFocusable = true
-            setOnClickListener { selectedProperty = property.id; show("my_property") }
+        val card = layoutInflater.inflate(R.layout.item_property_card, parent, false)
+        card.isFocusable = true
+        card.setOnClickListener { selectedProperty = property.id; show("my_property") }
+        card.findViewById<View>(R.id.card_info).setOnClickListener { card.performClick() }
+        card.findViewById<ImageView>(R.id.card_photo).apply {
+            contentDescription = property.title
+            if (backend.enabled && property.photoPath.isNotEmpty()) CloudPhotos.load(this, backend.photoUrl(property.photoPath))
+            else loadPhoto(this, property.photo)
         }
-        photo(card, property, 180)
-        text(card, property.title, 22f)
-        text(card, propertyPrice(property), 20f)
-        text(card, getString(if (property.negotiable) R.string.negotiable_badge else R.string.price_fixed), 13f)
-        text(card, getString(if (property.purpose == "rent") R.string.purpose_rent else R.string.purpose_sale), 13f)
-        text(card, property.location + " · " + propertyArea(property))
-        if (propertyAttributes(property).isNotBlank()) text(card, propertyAttributes(property), 14f)
-        if (allowRemove) button(card, R.string.favorite_remove) {
-            if (favorites().set(property.id, false)) show("favorites", false)
-            else toast(getString(R.string.listing_save_error))
+        card.findViewById<TextView>(R.id.card_kind).text = listOfNotNull(
+            getString(if (property.purpose == "rent") R.string.purpose_rent else R.string.purpose_sale),
+            getString(R.string.card_sample_photo).takeIf { property.photo.isEmpty() && property.photoPath.isEmpty() }
+        ).joinToString(" · ")
+        card.findViewById<TextView>(R.id.card_title).text = property.title
+        card.findViewById<TextView>(R.id.card_price).text = propertyPrice(property) + " · " +
+            getString(if (property.negotiable) R.string.negotiable_badge else R.string.price_fixed)
+        card.findViewById<TextView>(R.id.card_metadata).text = listOf(property.location, propertyArea(property),
+            propertyAttributes(property)).filter { it.isNotBlank() }.joinToString(" · ")
+        val heart = card.findViewById<ImageButton>(R.id.card_favorite)
+        fun update() {
+            val saved = favorites().contains(property.id)
+            heart.isSelected = saved; heart.imageAlpha = if (saved) 255 else 140
+            heart.contentDescription = getString(if (saved) R.string.favorite_remove else R.string.home_save) + " · " + property.title
         }
-        else favoriteButton(card, property)
+        update()
+        heart.setOnClickListener {
+            if (favorites().set(property.id, !favorites().contains(property.id))) {
+                if (allowRemove) show("favorites", false) else update()
+            } else toast(getString(R.string.listing_save_error))
+        }
         parent.addView(card)
     }
     private fun bindProperties() {

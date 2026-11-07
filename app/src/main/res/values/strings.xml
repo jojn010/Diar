@@ -318,4 +318,6 @@
 <string name="listing_view_map">Open location in Maps</string>
 <string name="listing_map_app_missing">No maps app is installed on this device.</string>
 <string name="listing_owner_tools">Manage your listing</string>
+<string name="sample_listing_label">Sample listing</string>
+<string name="card_sample_photo">Sample photo</string>
 </resources>

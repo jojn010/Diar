@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+    android:background="@drawable/card" android:padding="10dp" android:layout_marginBottom="20dp"
+    android:elevation="2dp" android:foreground="?attr/selectableItemBackground" android:tag="detail" android:onClick="navigate">
+    <FrameLayout android:layout_width="match_parent" android:layout_height="210dp" android:layout_marginBottom="12dp">
+        <com.google.android.material.imageview.ShapeableImageView android:id="@+id/card_photo"
+            android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop"
+            android:src="@drawable/house_modern" app:shapeAppearanceOverlay="@style/Photo" />
+        <ImageButton android:id="@+id/card_favorite" android:layout_width="48dp" android:layout_height="48dp"
+            android:layout_gravity="top|end" android:layout_margin="10dp" android:padding="12dp"
+            android:src="@drawable/ic_heart" android:background="@drawable/pill" app:tint="@color/teal"
+            android:contentDescription="@string/home_save" />
+    </FrameLayout>
+    <LinearLayout android:id="@+id/card_info" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:background="@drawable/surface_sage" android:padding="14dp">
+        <TextView android:id="@+id/card_kind" style="@style/Eyebrow" android:layout_marginBottom="4dp" />
+        <TextView android:id="@+id/card_title" style="@style/Subtitle" android:layout_marginTop="4dp" android:layout_marginBottom="6dp" />
+        <TextView android:id="@+id/card_price" style="@style/Subtitle" android:textColor="@color/teal" android:textSize="17sp" android:layout_marginTop="0dp" />
+        <TextView android:id="@+id/card_metadata" style="@style/Muted" android:layout_marginBottom="0dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,3 +1,13 @@
+# Diar 1.3.4 — One property-card design
+
+Replace the separate plain real-listing cards and hand-built sample cards with one shared XML component across Home, Listings, Discover and Favorites. Both now use the same 210dp rounded photo, sage information panel, typography, compact metadata, padding, elevation and overlaid heart action. Real listing prices and attributes remain factual; sample-only ratings are not invented for published homes. Sample listings are labelled as demonstrations.
+
+Favorites and owner-only controls remain unchanged.
+
+Validation: build, seven unit tests, lint (no errors), nineteen isolated Android 14 emulator tests and two configured cloud UI checks passed. Rendered sample/real cards were inspected in English and Arabic; the favorite flow was rerun with captured card previews after the final label adjustment.
+
+---
+
 # Diar 1.3.3 — Favorites for real homes
 
 Add working favorites to real listing cards and details, including homes published by another user. Favorites opens the same detail view and supports removal; saved IDs persist on this device separately for each account. Missing/deleted listings show an unavailable state. Favorites do not sync across devices yet.

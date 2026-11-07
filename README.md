@@ -35,6 +35,8 @@ Without Supabase settings, or with `-PdiarOffline=true`, the app runs the origin
 
 Social sign-in, checkout, remote messaging, notifications and the original sample homes/map remain demonstrations. Checkout does not charge or store card details. This is a development preview, not a production-ready marketplace.
 
+All sample and real property cards use `item_property_card.xml`, including the same rounded image, sage information panel and overlaid heart action. Shared styles keep their typography and spacing consistent in English and Arabic. Demo cards are labelled; real cards show actual listing metadata without fabricated ratings.
+
 ## Favorites and listing actions
 
 Real local/published homes have a heart action on their cards and details. Favorites shows the same home cards and opens the same detail view, with remove controls. Saved IDs persist privately on this device and are separated by signed-in account (and guest mode); they do not sync through Supabase yet. A missing/deleted listing is shown as unavailable, without retaining a second copy of its details. Refresh checks the latest loaded homes.

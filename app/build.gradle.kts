@@ -21,8 +21,8 @@ android {
         applicationId = "com.example.diar"
         minSdk = 24
         targetSdk = 37
-        versionCode = 11
-        versionName = "1.3.3"
+        versionCode = 12
+        versionName = "1.3.4"
 
         buildConfigField("String", "SUPABASE_URL", configString(if (offlineChecks) "" else backend.getProperty("supabase.url", "")))
         buildConfigField("String", "SUPABASE_KEY", configString(if (offlineChecks) "" else backend.getProperty("supabase.publishableKey", "")))
