@@ -19,4 +19,4 @@ if [[ -z "$emulator_serial" ]]; then
   echo 'Build/unit/lint finished. Emulator tests skipped: no running emulator.'
   exit 0
 fi
-ANDROID_SERIAL="$emulator_serial" ./gradlew -PdiarOffline=true connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=com.example.diar.CloudUiSmokeTest,com.example.diar.SupabaseLiveTest --console=plain
+ANDROID_SERIAL="$emulator_serial" ./gradlew -PdiarOffline=true connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notAnnotation=com.example.diar.LiveProjectTest --console=plain

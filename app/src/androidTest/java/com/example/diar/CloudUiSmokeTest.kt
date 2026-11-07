@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /** Read-only smoke test against the configured project; never submits credentials or listings. */
+@LiveProjectTest
 @RunWith(AndroidJUnit4::class)
 class CloudUiSmokeTest {
     @Test fun configuredCloudHasBilingualEmailLoginAndReachableListings() {
@@ -53,4 +54,41 @@ class CloudUiSmokeTest {
             }
         } finally { instrumentation.runOnMainSync { AppCompatDelegate.setApplicationLocales(previous) } }
     }
+    @Test fun anotherOwnersPublishedHomeCanBeSavedWithoutShowingOwnerControls() {
+        assumeTrue(BuildConfig.SUPABASE_URL.isNotEmpty())
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val backend = SupabaseBackend(context)
+        val property = backend.listings().firstOrNull { it.ownerId != backend.userId }
+        assumeTrue(property != null)
+        property!!
+        PropertyStore(context, "diar_public_cache").save(property)
+        val favorites = FavoriteStore(context, backend.userId.ifEmpty { "guest" })
+        val wasSaved = favorites.contains(property.id)
+        fun texts(view: View): List<android.widget.TextView> = when (view) {
+            is android.view.ViewGroup -> (0 until view.childCount).flatMap { texts(view.getChildAt(it)) }
+            is android.widget.TextView -> listOf(view)
+            else -> emptyList()
+        }
+        try {
+            favorites.set(property.id, false)
+            ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+                scenario.onActivity { a ->
+                    a.navigate(View(a).apply { tag = "home" })
+                    val title = texts(a.findViewById(R.id.own_listings)).single { it.text.toString() == property.title }
+                    (title.parent as View).performClick()
+                    val detail = texts(a.findViewById(R.id.property_content))
+                    assertFalse(detail.any { it.text == a.getString(R.string.listing_remove) })
+                    assertFalse(detail.any { it.text == a.getString(R.string.listing_photo) })
+                    assertFalse(detail.any { it.text == a.getString(R.string.location_details) })
+                    assertTrue(detail.any { it.text == a.getString(R.string.listing_share) })
+                    assertTrue(detail.any { it.text == a.getString(R.string.listing_view_map) })
+                    a.findViewById<View>(R.id.property_favorite).performClick()
+                    assertTrue(favorites.contains(property.id))
+                    a.navigate(View(a).apply { tag = "favorites" })
+                    assertTrue(texts(a.findViewById(R.id.saved_items)).any { it.text.toString() == property.title })
+                }
+            }
+        } finally { favorites.set(property.id, wasSaved) }
+    }
+
 }

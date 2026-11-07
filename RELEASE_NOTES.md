@@ -1,3 +1,13 @@
+# Diar 1.3.3 — Favorites for real homes
+
+Add working favorites to real listing cards and details, including homes published by another user. Favorites opens the same detail view and supports removal; saved IDs persist on this device separately for each account. Missing/deleted listings show an unavailable state. Favorites do not sync across devices yet.
+
+Bring real-home details closer to the sample design with a larger photo, highlighted price/attributes and a heart action. Add Android sharing and opening the pin in Maps for every viewer. Keep photo/pin editing and deletion in an owner-only management section. Sample tours, chat and payments remain demonstrations.
+
+Validation: debug build and lint (no errors), seven unit tests, nineteen isolated Android 14 emulator tests, and two configured read-only cloud UI checks passed. Coverage includes English/Arabic favorites, recreation, account separation and a published home owned by another account. Live-project tests are now explicitly excluded from the default offline suite by annotation.
+
+---
+
 # Diar 1.3.2 — Visible app version
 
 Show the installed app version below the introduction on the loading/start screen in English and Arabic. The label reads BuildConfig.VERSION_NAME, so future releases automatically show their actual version.

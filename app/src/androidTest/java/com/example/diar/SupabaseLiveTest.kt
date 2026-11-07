@@ -12,6 +12,7 @@ import java.io.File
 import java.util.UUID
 
 /** Opt-in only. Use disposable, preconfirmed QA accounts; never real user credentials. */
+@LiveProjectTest
 @RunWith(AndroidJUnit4::class)
 class SupabaseLiveTest {
     @Test fun disposableOwnersCanPublishPhotoEditAndDeleteAcrossSessions() {

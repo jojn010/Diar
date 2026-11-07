@@ -35,6 +35,12 @@ Without Supabase settings, or with `-PdiarOffline=true`, the app runs the origin
 
 Social sign-in, checkout, remote messaging, notifications and the original sample homes/map remain demonstrations. Checkout does not charge or store card details. This is a development preview, not a production-ready marketplace.
 
+## Favorites and listing actions
+
+Real local/published homes have a heart action on their cards and details. Favorites shows the same home cards and opens the same detail view, with remove controls. Saved IDs persist privately on this device and are separated by signed-in account (and guest mode); they do not sync through Supabase yet. A missing/deleted listing is shown as unavailable, without retaining a second copy of its details. Refresh checks the latest loaded homes.
+
+All real listing detail views offer sharing through the Android share sheet and opening the confirmed pin in an installed maps app. Photo, price and attributes use the same visual style for owners and visitors. Only owners see photo replacement, pin editing and deletion. Sharing sends listing text, not an invented public web link. Sample-home tour/chat/payment actions remain demonstrations and are not represented as working actions on real listings.
+
 ## Map picker
 
 The actual listing map picker uses bundled Leaflet 1.9.4 with standard OpenStreetMap tiles and visible attribution. Pan, zoom and tap to select a pin. **Map tiles need internet**; a loading/error message and latitude/longitude fields provide a fallback when tiles cannot load. Opening the map does not publish listing data or photos. The map provider receives the normal requests needed to display map tiles. Coordinates are applied to the form only when confirmed and are uploaded only when the home is published or its published pin is updated. Current device location may be approximate and can be refined using the map.

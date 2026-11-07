@@ -311,4 +311,11 @@
 <string name="cloud_account_exists">يوجد حساب بهذا البريد الإلكتروني. استخدم تسجيل الدخول.</string>
 <string name="cloud_signup_disabled">إنشاء حسابات جديدة غير متاح حاليًا. تواصل مع دعم ديار.</string>
     <string name="app_version_label">ديار — الإصدار %1$s</string>
+<string name="favorite_remove">إزالة من المفضلة</string>
+<string name="favorite_unavailable">أحد العقارات المحفوظة غير متاح في القائمة المحمّلة حاليًا. حدّث القائمة للتحقّق أو أزله من المفضلة.</string>
+<string name="favorites_device_hint">تُحفظ المفضلة على هذا الجهاز لكل حساب بشكل منفصل. لا تتزامن بين الأجهزة بعد.</string>
+<string name="listing_share">مشاركة تفاصيل العقار</string>
+<string name="listing_view_map">فتح الموقع في الخرائط</string>
+<string name="listing_map_app_missing">لا يوجد تطبيق خرائط مثبّت على هذا الجهاز.</string>
+<string name="listing_owner_tools">إدارة إعلانك</string>
 </resources>

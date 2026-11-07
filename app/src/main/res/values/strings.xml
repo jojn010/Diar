@@ -311,4 +311,11 @@
 <string name="cloud_account_exists">An account already exists for this email. Use Sign in.</string>
 <string name="cloud_signup_disabled">New account registration is currently disabled. Contact Diar support.</string>
     <string name="app_version_label">Diar v%1$s</string>
+<string name="favorite_remove">Remove from favorites</string>
+<string name="favorite_unavailable">A saved home is not currently available in the loaded listings. Refresh to check again, or remove it from favorites.</string>
+<string name="favorites_device_hint">Saved on this device, separately for each account. Favorites do not sync between devices yet.</string>
+<string name="listing_share">Share home details</string>
+<string name="listing_view_map">Open location in Maps</string>
+<string name="listing_map_app_missing">No maps app is installed on this device.</string>
+<string name="listing_owner_tools">Manage your listing</string>
 </resources>

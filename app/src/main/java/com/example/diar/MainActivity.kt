@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         return remote + propertyStore.all().filterNot { it.id in remoteIds }
     }
     private fun owns(property: Property) = !backend.enabled || property.ownerId.isEmpty() || property.ownerId == backend.userId
+    private fun favorites() = FavoriteStore(this, if (backend.enabled) backend.userId.ifEmpty { "guest" } else "offline")
     private var selectedProperty: String? = null
     private var selectedPhoto = ""
     private var tone: ToneGenerator? = null
@@ -223,10 +224,24 @@ class MainActivity : AppCompatActivity() {
                 }.start() }
         }
         findViewById<LinearLayout>(R.id.saved_items)?.let { items ->
-            if (!prefs.getBoolean("saved", false)) {
-                items.removeAllViews()
-                items.addView(TextView(this).apply { text = getString(R.string.favorites_empty); textSize = 18f; setPadding(0, 32, 0, 32) })
+            val savedIds = favorites().ids()
+            val sampleSaved = prefs.getBoolean("saved", false)
+            if (!sampleSaved) items.removeAllViews()
+            if (!sampleSaved && savedIds.isEmpty()) text(items, getString(R.string.favorites_empty), 18f)
+            val available = properties().associateBy { it.id }
+            savedIds.forEach { id ->
+                val property = available[id]
+                if (property != null) listingCard(items, property, allowRemove = true)
+                else {
+                    text(items, getString(R.string.favorite_unavailable))
+                    button(items, R.string.favorite_remove) {
+                        if (favorites().set(id, false)) show("favorites", false)
+                        else toast(getString(R.string.listing_save_error))
+                    }
+                }
             }
+            text(items, getString(R.string.favorites_device_hint), 13f)
+            if (backend.enabled) button(items, R.string.cloud_refresh) { refreshListings(true) }
         }
         click(R.id.clear_notifications) {
             findViewById<LinearLayout>(R.id.notification_items).removeAllViews()
@@ -362,6 +377,47 @@ class MainActivity : AppCompatActivity() {
     }
     private fun propertyArea(property: Property) = getString(R.string.listing_area_value,
         NumberFormat.getNumberInstance(resources.configuration.locales[0]).format(property.area.toBigDecimal()))
+    private fun favoriteButton(parent: LinearLayout, property: Property) {
+        MaterialButton(this).apply {
+            if (current == "my_property") id = R.id.property_favorite
+            minHeight = dp(56)
+            icon = androidx.core.content.ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_heart)
+            fun update() {
+                val saved = favorites().contains(property.id)
+                setText(if (saved) R.string.favorite_remove else R.string.home_save)
+                contentDescription = text.toString() + " · " + property.title
+                isSelected = saved
+            }
+            update()
+            setOnClickListener {
+                if (favorites().set(property.id, !favorites().contains(property.id))) update()
+                else toast(getString(R.string.listing_save_error))
+            }
+            parent.addView(this)
+        }
+    }
+    private fun listingCard(parent: LinearLayout, property: Property, allowRemove: Boolean = false) {
+        val card = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; setPadding(dp(12), dp(12), dp(12), dp(16))
+            setBackgroundResource(R.drawable.card)
+            layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) }
+            isFocusable = true
+            setOnClickListener { selectedProperty = property.id; show("my_property") }
+        }
+        photo(card, property, 180)
+        text(card, property.title, 22f)
+        text(card, propertyPrice(property), 20f)
+        text(card, getString(if (property.negotiable) R.string.negotiable_badge else R.string.price_fixed), 13f)
+        text(card, getString(if (property.purpose == "rent") R.string.purpose_rent else R.string.purpose_sale), 13f)
+        text(card, property.location + " · " + propertyArea(property))
+        if (propertyAttributes(property).isNotBlank()) text(card, propertyAttributes(property), 14f)
+        if (allowRemove) button(card, R.string.favorite_remove) {
+            if (favorites().set(property.id, false)) show("favorites", false)
+            else toast(getString(R.string.listing_save_error))
+        }
+        else favoriteButton(card, property)
+        parent.addView(card)
+    }
     private fun bindProperties() {
         findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.sound_feedback)?.apply {
             isChecked = prefs.getBoolean("sound", false)
@@ -390,37 +446,39 @@ class MainActivity : AppCompatActivity() {
             }
             text(parent, if (items.isEmpty()) getString(R.string.listing_empty)
                 else getString(R.string.listing_saved_count, items.size))
-            items.forEach { property ->
-                val card = LinearLayout(this).apply {
-                    orientation = LinearLayout.VERTICAL; setPadding(dp(12), dp(12), dp(12), dp(16))
-                    setBackgroundResource(R.drawable.card)
-                    layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) }
-                    isFocusable = true
-                    setOnClickListener { selectedProperty = property.id; show("my_property") }
-                }
-                photo(card, property, 180)
-                text(card, property.title, 22f)
-                text(card, propertyPrice(property), 20f)
-                text(card, getString(if (property.negotiable) R.string.negotiable_badge else R.string.price_fixed), 13f)
-                text(card, getString(if (property.purpose == "rent") R.string.purpose_rent else R.string.purpose_sale), 13f)
-                text(card, property.location + " · " + propertyArea(property))
-                if (propertyAttributes(property).isNotBlank()) text(card, propertyAttributes(property), 14f)
-                parent.addView(card)
-            }
+            items.forEach { property -> listingCard(parent, property) }
         }
         findViewById<LinearLayout>(R.id.property_content)?.let { parent ->
             val property = properties().find { it.id == selectedProperty }
             if (property == null) { text(parent, getString(R.string.listing_empty)); return@let }
-            photo(parent, property, 260)
+            photo(parent, property, 300)
+            favoriteButton(parent, property)
             text(parent, getString(if (property.purpose == "rent") R.string.listing_for_rent else R.string.listing_for_sale), 12f)
             text(parent, property.title, 30f)
-            text(parent, propertyPrice(property), 26f)
+            text(parent, propertyPrice(property), 26f).apply {
+                setTextColor(getColor(R.color.teal)); setBackgroundResource(R.drawable.surface_gold)
+                setPadding(dp(14), dp(14), dp(14), dp(14))
+            }
             text(parent, getString(if (property.negotiable) R.string.negotiable_badge else R.string.price_fixed), 14f)
             text(parent, property.location, 20f)
             text(parent, propertyArea(property), 20f)
-            if (propertyAttributes(property).isNotBlank()) text(parent, propertyAttributes(property), 18f)
+            if (propertyAttributes(property).isNotBlank()) text(parent, propertyAttributes(property), 18f).apply {
+                setBackgroundResource(R.drawable.surface_sage); setPadding(dp(14), dp(14), dp(14), dp(14))
+            }
+            button(parent, R.string.listing_share) {
+                val summary = listOf(property.title, propertyPrice(property), property.location, propertyArea(property),
+                    propertyAttributes(property), property.description).filter { it.isNotBlank() }.joinToString("\n")
+                startActivity(android.content.Intent.createChooser(android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                    type = "text/plain"; putExtra(android.content.Intent.EXTRA_TEXT, summary)
+                }, getString(R.string.listing_share)))
+            }
             if (property.latitude != null && property.longitude != null) {
                 text(parent, pinLabel(property.latitude, property.longitude), 14f)
+                button(parent, R.string.listing_view_map) {
+                    val uri = android.net.Uri.parse("geo:0,0?q=${property.latitude},${property.longitude}(${android.net.Uri.encode(property.title)})")
+                    try { startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, uri)) }
+                    catch (_: android.content.ActivityNotFoundException) { toast(getString(R.string.listing_map_app_missing)) }
+                }
                 if (owns(property)) button(parent, R.string.location_details) {
                     mapPicker = MapPicker(this).also { it.show(property.latitude, property.longitude) { lat, lon ->
                         saveListing(property.copy(latitude = lat, longitude = lon, locationSource = "map"), true) {
@@ -429,6 +487,7 @@ class MainActivity : AppCompatActivity() {
                     } }
                 }
             }
+            if (owns(property)) text(parent, getString(R.string.listing_owner_tools), 20f)
             if (owns(property)) button(parent, R.string.listing_photo) { photoPicker.launch(arrayOf("image/*")) }
             if (property.description.isNotBlank()) text(parent, property.description)
             text(parent, getString(if (property.ownerId.isEmpty()) R.string.listing_local else R.string.cloud_published), 13f)
@@ -555,7 +614,7 @@ class MainActivity : AppCompatActivity() {
                 refreshing = false
                 if (isDestroyed || isFinishing) return@runOnUiThread
                 if (result.isSuccess) {
-                    if (current == screen && current in listOf("home", "listings", "my_listings", "my_property")) show(current, false)
+                    if (current == screen && current in listOf("home", "listings", "my_listings", "my_property", "favorites")) show(current, false)
                     if (report) toast(getString(R.string.cloud_refreshed))
                 } else if (report) toast(getString(R.string.cloud_error))
             }
