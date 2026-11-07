@@ -7,6 +7,7 @@
             <TextView style="@style/Eyebrow" ns0:text="@string/splash_eyebrow" ns0:gravity="center" />
             <TextView style="@style/Title" ns0:text="@string/screen_splash_text_5" ns0:gravity="center" />
             <TextView style="@style/Muted" ns0:text="@string/screen_splash_text_6" ns0:gravity="center" />
+            <TextView ns0:id="@+id/app_version" style="@style/Muted" ns0:gravity="center" ns0:textDirection="locale" ns0:layout_marginTop="12dp" ns0:layout_marginBottom="12dp" />
             <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_splash_text_7" ns0:tag="welcome" ns0:onClick="navigate" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
         </LinearLayout>
     </ScrollView>

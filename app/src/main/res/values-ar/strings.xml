@@ -310,4 +310,5 @@
 <string name="cloud_email_delivery_setup">تعذّر إرسال رسالة التسجيل. يجب إعداد خدمة البريد الإلكتروني في ديار قبل التسجيل بهذا العنوان.</string>
 <string name="cloud_account_exists">يوجد حساب بهذا البريد الإلكتروني. استخدم تسجيل الدخول.</string>
 <string name="cloud_signup_disabled">إنشاء حسابات جديدة غير متاح حاليًا. تواصل مع دعم ديار.</string>
+    <string name="app_version_label">ديار — الإصدار %1$s</string>
 </resources>

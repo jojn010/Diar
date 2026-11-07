@@ -310,4 +310,5 @@
 <string name="cloud_email_delivery_setup">Registration email could not be sent. Diar’s email delivery must be configured before this address can register.</string>
 <string name="cloud_account_exists">An account already exists for this email. Use Sign in.</string>
 <string name="cloud_signup_disabled">New account registration is currently disabled. Contact Diar support.</string>
+    <string name="app_version_label">Diar v%1$s</string>
 </resources>

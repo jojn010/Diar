@@ -193,6 +193,7 @@ class MainActivity : AppCompatActivity() {
             }.show()
     }
     private fun bind() {
+        findViewById<TextView>(R.id.app_version)?.text = getString(R.string.app_version_label, BuildConfig.VERSION_NAME)
         bindProperties()
         bindCloudControls()
         click(R.id.change_language) { chooseLanguage() }

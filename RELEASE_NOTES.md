@@ -1,3 +1,11 @@
+# Diar 1.3.2 — Visible app version
+
+Show the installed app version below the introduction on the loading/start screen in English and Arabic. The label reads BuildConfig.VERSION_NAME, so future releases automatically show their actual version.
+
+Validation: debug build, seven unit tests and lint passed. Emulator verification was unavailable because no emulator was running.
+
+---
+
 # Diar 1.3.1 — Explain authentication failures
 
 Replace the ambiguous combined sign-in/save error with English/Arabic messages for incorrect credentials, unconfirmed email, unavailable signup, duplicate accounts and email-delivery configuration. Preserve only the Supabase machine-readable error code; never display/log raw server responses or credentials. Add regressions for distinct errors sharing HTTP 400 and safe unknown-code fallback.
