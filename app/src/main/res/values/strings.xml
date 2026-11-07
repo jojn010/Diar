@@ -305,4 +305,9 @@
     <string name="cloud_error">Could not connect or save online. Check your internet connection and try again. Your local listings are unchanged.</string>
     <string name="cloud_account_hint">Your account and published listings use Supabase. Payments, chat and sample homes are still demonstrations.</string>
     <string name="listing_title_length">Enter a title of 2–160 characters.</string>
+<string name="cloud_invalid_credentials">Email or password is incorrect. If you have not registered in Diar yet, create an account first.</string>
+<string name="cloud_email_unconfirmed">Confirm your email using the signup email, then return and sign in. Check your spam folder too.</string>
+<string name="cloud_email_delivery_setup">Registration email could not be sent. Diar’s email delivery must be configured before this address can register.</string>
+<string name="cloud_account_exists">An account already exists for this email. Use Sign in.</string>
+<string name="cloud_signup_disabled">New account registration is currently disabled. Contact Diar support.</string>
 </resources>

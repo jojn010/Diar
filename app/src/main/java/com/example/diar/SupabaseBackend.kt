@@ -142,11 +142,35 @@ class SupabaseBackend(context: Context,
             if (representation) connection.setRequestProperty("Prefer", "return=representation")
             if (body != null) { connection.doOutput = true; connection.outputStream.use { it.write(body) } }
             val status = connection.responseCode
-            if (status !in 200..299) throw HttpFailure(status) // Never log passwords, tokens, or response bodies.
+            if (status !in 200..299) {
+                // Retain only the machine-readable code, never a server message or credentials.
+                val code = runCatching { connection.errorStream?.bufferedReader()?.use {
+                    JSONObject(it.readText().take(16384)).optString("code")
+                } }.getOrNull().orEmpty()
+                throw HttpFailure(status, code)
+            }
             return connection.inputStream.bufferedReader().use { it.readText() }
         } finally { connection.disconnect() }
     }
-    class HttpFailure(val status: Int) : Exception("Supabase HTTP $status")
+    class HttpFailure(val status: Int, val code: String = "") : Exception("Supabase HTTP $status") {
+        fun messageId(): Int = when (code) {
+            "invalid_credentials" -> R.string.cloud_invalid_credentials
+            "email_not_confirmed" -> R.string.cloud_email_unconfirmed
+            "email_address_not_authorized" -> R.string.cloud_email_delivery_setup
+            "over_email_send_rate_limit", "over_request_rate_limit" -> R.string.cloud_rate_limit
+            "email_exists", "user_already_exists" -> R.string.cloud_account_exists
+            "email_provider_disabled", "signup_disabled" -> R.string.cloud_signup_disabled
+            "weak_password" -> R.string.error_password
+            else -> when (status) {
+                400, 401 -> R.string.cloud_auth_error
+                403 -> R.string.cloud_not_owner
+                409 -> R.string.cloud_conflict
+                404 -> R.string.cloud_setup_error
+                429 -> R.string.cloud_rate_limit
+                else -> R.string.cloud_error
+            }
+        }
+    }
     class BackendException(val messageId: Int) : Exception()
     companion object {
         // Serialize token refresh and mutations across Activity recreation.

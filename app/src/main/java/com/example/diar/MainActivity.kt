@@ -576,14 +576,7 @@ class MainActivity : AppCompatActivity() {
                     if (reportError) {
                         val message = when (error) {
                             is SupabaseBackend.BackendException -> error.messageId
-                            is SupabaseBackend.HttpFailure -> when (error.status) {
-                                400, 401 -> R.string.cloud_auth_error
-                                403 -> R.string.cloud_not_owner
-                                409 -> R.string.cloud_conflict
-                                404 -> R.string.cloud_setup_error
-                                429 -> R.string.cloud_rate_limit
-                                else -> R.string.cloud_error
-                            }
+                            is SupabaseBackend.HttpFailure -> error.messageId()
                             else -> R.string.cloud_error
                         }
                         AlertDialog.Builder(this).setMessage(message).setPositiveButton(android.R.string.ok, null).show()

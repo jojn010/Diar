@@ -1,3 +1,13 @@
+# Diar 1.3.1 — Explain authentication failures
+
+Replace the ambiguous combined sign-in/save error with English/Arabic messages for incorrect credentials, unconfirmed email, unavailable signup, duplicate accounts and email-delivery configuration. Preserve only the Supabase machine-readable error code; never display/log raw server responses or credentials. Add regressions for distinct errors sharing HTTP 400 and safe unknown-code fallback.
+
+Existing prototype logins did not create Supabase users. New users must register in Diar first; a Supabase dashboard account is separate from an app account.
+
+Validation: seven unit tests, debug build and lint (no errors) passed. Emulator tests were unavailable because no emulator was running. This fix does not bypass email confirmation or change account passwords.
+
+---
+
 # Diar 1.3.0 — Supabase connection preview
 
 Connect configured builds to Supabase email/password authentication, shared listings and public listing photos. Sign-in sessions are encrypted with Android Keystore and refreshed before writes. Published listings have owner-only edits/deletion enforced by database and storage policies. Home/Search show loaded shared listings; My listings filters to the signed-in owner and remaining local homes.
