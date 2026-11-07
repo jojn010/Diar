@@ -46,7 +46,7 @@ class HomeComposer(private val activity: MainActivity, initialStep: Int,
     }
     fun validateStep(step: Int): Boolean = when (step) {
         0 -> when {
-            value(R.id.property_title).isBlank() -> invalid(R.id.property_title, R.string.listing_required)
+            value(R.id.property_title).length !in 2..160 -> invalid(R.id.property_title, R.string.listing_title_length)
             PropertyStore.number(value(R.id.property_area)) == null -> invalid(R.id.property_area, R.string.listing_invalid)
             else -> true
         }

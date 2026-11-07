@@ -1,8 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
 
+val backend = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+}
+fun configString(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+val offlineChecks = providers.gradleProperty("diarOffline").orNull == "true"
+
 android {
+    buildFeatures { buildConfig = true }
     namespace = "com.example.diar"
     compileSdk {
         version = release(37)
@@ -12,8 +21,11 @@ android {
         applicationId = "com.example.diar"
         minSdk = 24
         targetSdk = 37
-        versionCode = 7
-        versionName = "1.2.3"
+        versionCode = 8
+        versionName = "1.3.0"
+
+        buildConfigField("String", "SUPABASE_URL", configString(if (offlineChecks) "" else backend.getProperty("supabase.url", "")))
+        buildConfigField("String", "SUPABASE_KEY", configString(if (offlineChecks) "" else backend.getProperty("supabase.publishableKey", "")))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

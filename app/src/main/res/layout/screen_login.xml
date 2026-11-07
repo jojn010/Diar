@@ -8,13 +8,14 @@
         <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:padding="20dp" ns0:paddingBottom="28dp">
             <LinearLayout ns0:layout_width="match_parent" ns0:layout_height="wrap_content" ns0:orientation="vertical" ns0:background="@drawable/hero_sage" ns0:padding="20dp" ns0:layout_marginBottom="20dp">
                 <TextView style="@style/Eyebrow" ns0:text="@string/login_eyebrow" ns0:textColor="@color/terracotta" />
-                <TextView style="@style/Title" ns0:text="@string/screen_login_text_7" />
-                <TextView style="@style/Muted" ns0:text="@string/screen_login_text_8" />
+                <TextView style="@style/Title" ns0:id="@+id/login_title" ns0:text="@string/screen_login_text_7" />
+                <TextView style="@style/Muted" ns0:id="@+id/login_intro" ns0:text="@string/screen_login_text_8" />
             </LinearLayout>
-            <TextView style="@style/Muted" ns0:text="@string/screen_login_text_9" />
+            <TextView style="@style/Muted" ns0:id="@+id/login_label" ns0:text="@string/screen_login_text_9" />
             <EditText ns0:id="@+id/login_phone" style="@style/Field" ns0:hint="@string/screen_login_hint_10" ns0:inputType="phone" ns0:autofillHints="phone" ns0:textDirection="ltr" ns0:gravity="start|center_vertical" />
+            <EditText ns0:id="@+id/login_password" style="@style/Field" ns0:hint="@string/cloud_password" ns0:inputType="textPassword" ns0:autofillHints="password" ns0:visibility="gone" />
             <com.google.android.material.button.MaterialButton style="@style/Action" ns0:text="@string/screen_login_text_11" ns0:id="@+id/login_submit" ns0:layout_height="wrap_content" ns0:minHeight="56dp" ns0:paddingTop="12dp" ns0:paddingBottom="12dp" />
-            <TextView style="@style/Muted" ns0:text="@string/screen_login_text_12" />
+            <TextView style="@style/Muted" ns0:id="@+id/login_footer" ns0:text="@string/screen_login_text_12" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -23,7 +23,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 
-/** Offline UI prototype: no authentication, payment or messaging service is contacted. */
+/** Supabase listings/auth when configured; payments and messaging remain demonstrations. */
 class MainActivity : AppCompatActivity() {
     private val screens = mapOf(
         "my_listings" to R.layout.screen_my_listings, "sell" to R.layout.screen_sell, "my_property" to R.layout.screen_my_property,
@@ -43,11 +43,24 @@ class MainActivity : AppCompatActivity() {
     private val prefs by lazy { getSharedPreferences("diar_demo", MODE_PRIVATE) }
     private val messages = mutableListOf<String>()
     private val propertyStore by lazy { PropertyStore(this) }
+    private val backend by lazy { SupabaseBackend(this) }
+    private val cloudCache by lazy { PropertyStore(this, "diar_public_cache") }
+    private var cloudBusy = false
+    private var refreshing = false
+    private var cloudDialog: AlertDialog? = null
+    private fun properties(): List<Property> {
+        if (!backend.enabled) return propertyStore.all()
+        val remote = cloudCache.all()
+        val remoteIds = remote.map { it.id }.toSet()
+        return remote + propertyStore.all().filterNot { it.id in remoteIds }
+    }
+    private fun owns(property: Property) = !backend.enabled || property.ownerId.isEmpty() || property.ownerId == backend.userId
     private var selectedProperty: String? = null
     private var selectedPhoto = ""
     private var tone: ToneGenerator? = null
     private var composer: HomeComposer? = null
     private var composerStep = 0
+    private var draftPropertyId = UUID.randomUUID().toString()
     private var propertyLatitude: Double? = null
     private var propertyLongitude: Double? = null
     private var propertyLocationSource = ""
@@ -63,10 +76,13 @@ class MainActivity : AppCompatActivity() {
             try {
                 val file = PropertyPhotos(this).import(uri)
                 if (current == "my_property") {
-                    val property = propertyStore.all().find { it.id == selectedProperty }
-                    if (property != null && propertyStore.save(property.copy(photo = file.name))) {
-                        if (property.photo.isNotEmpty()) File(filesDir, property.photo).delete()
-                        show("my_property", false)
+                    val property = properties().find { it.id == selectedProperty }
+                    if (property != null && owns(property)) {
+                        saveListing(property.copy(photo = file.name), true, failed = { file.delete() }) {
+                            if (property.photo.isNotEmpty()) File(filesDir, property.photo).delete()
+                            if (backend.enabled && property.ownerId.isNotEmpty()) file.delete()
+                            show("my_property", false)
+                        }
                     } else { file.delete(); toast(getString(R.string.listing_save_error)) }
                 } else {
                     adoptDraftPhoto(file.name)
@@ -76,6 +92,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onDestroy() {
         if (isFinishing && current == "sell") discardPropertyDraft()
+        cloudDialog?.dismiss(); cloudDialog = null
         mapPicker?.dismiss(); locationCancellation?.cancel(); locationHandler.removeCallbacksAndMessages(null)
         tone?.release(); tone = null; super.onDestroy()
     }
@@ -98,6 +115,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         composerStep = savedInstanceState?.getInt("composerStep") ?: 0
+        draftPropertyId = savedInstanceState?.getString("draftPropertyId") ?: draftPropertyId
         propertyLatitude = savedInstanceState?.takeIf { it.containsKey("propertyLatitude") }?.getDouble("propertyLatitude")
         propertyLongitude = savedInstanceState?.takeIf { it.containsKey("propertyLongitude") }?.getDouble("propertyLongitude")
         propertyLocationSource = savedInstanceState?.getString("propertyLocationSource") ?: ""
@@ -106,8 +124,10 @@ class MainActivity : AppCompatActivity() {
         history.addAll(savedInstanceState?.getStringArrayList("history") ?: emptyList())
         messages.addAll(savedInstanceState?.getStringArrayList("messages") ?: emptyList())
         show(savedInstanceState?.getString("screen") ?: "splash", false)
+        if (backend.enabled) refreshListings(false)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                if (cloudBusy) return
                 if (current == "sell" && composerStep > 0) { composer?.showStep(composerStep - 1); return }
                 if (current == "sell") discardPropertyDraft()
                 if (history.isNotEmpty()) show(history.removeAt(history.lastIndex), false) else finish()
@@ -118,6 +138,7 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putString("screen", current)
         outState.putInt("composerStep", composerStep)
+        outState.putString("draftPropertyId", draftPropertyId)
         propertyLatitude?.let { outState.putDouble("propertyLatitude", it) }
         propertyLongitude?.let { outState.putDouble("propertyLongitude", it) }
         outState.putString("propertyLocationSource", propertyLocationSource)
@@ -127,6 +148,13 @@ class MainActivity : AppCompatActivity() {
         outState.putStringArrayList("messages", ArrayList(messages))
     }
     fun navigate(view: View) {
+        if (cloudBusy) return
+        if (backend.enabled && current == "account" && view.tag == "welcome") {
+            cloudAction({ backend.signOut() }) { show("welcome") }; return
+        }
+        if (backend.enabled && view.tag == "sell" && backend.userId.isEmpty()) {
+            toast(getString(R.string.cloud_sign_in_required)); show("login"); return
+        }
         if ((current == "sell" && view.tag != "sell") || (view.tag == "sell" && current != "sell")) discardPropertyDraft()
         show(view.tag.toString())
     }
@@ -166,13 +194,16 @@ class MainActivity : AppCompatActivity() {
     }
     private fun bind() {
         bindProperties()
+        bindCloudControls()
         click(R.id.change_language) { chooseLanguage() }
         click(R.id.google) { toast(getString(R.string.google_demo)) }
         click(R.id.facebook) { toast(getString(R.string.facebook_demo)) }
         click(R.id.login_submit) {
+            if (backend.enabled) { authenticate(false); return@click }
             if (valid(R.id.login_phone, value(R.id.login_phone).count { it.isDigit() } >= 8, getString(R.string.error_phone))) show("home")
         }
         click(R.id.signup_submit) {
+            if (backend.enabled) { authenticate(true); return@click }
             when {
                 !valid(R.id.full_name, value(R.id.full_name).length >= 2, getString(R.string.error_name)) -> Unit
                 !valid(R.id.signup_phone, value(R.id.signup_phone).count { it.isDigit() } >= 8, getString(R.string.error_phone)) -> Unit
@@ -206,7 +237,7 @@ class MainActivity : AppCompatActivity() {
             rows.forEach { it.contentDescription = it.text.toString() + " · Jerusalem · القدس" }
             val empty = TextView(this).apply { text = getString(R.string.search_no_matches); textSize = 20f; setPadding(0, 40, 0, 40) }
             results.addView(empty)
-            propertyStore.all().forEach { property ->
+            properties().forEach { property ->
                 rows.add(MaterialButton(this).apply {
                     text = property.title + " · " + property.location + " · " + propertyPrice(property)
                     contentDescription = text
@@ -283,7 +314,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun discardPropertyDraft() {
         deleteDraftPhoto()
-        selectedPhoto = ""; composerStep = 0
+        selectedPhoto = ""; composerStep = 0; draftPropertyId = UUID.randomUUID().toString()
         propertyLatitude = null; propertyLongitude = null; propertyLocationSource = ""
     }
     private fun updatePhotoPreview() {
@@ -311,10 +342,11 @@ class MainActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(-1, dp(height))
             scaleType = ImageView.ScaleType.CENTER_CROP
             shapeAppearanceModel = shapeAppearanceModel.toBuilder().setAllCornerSizes(dp(20).toFloat()).build()
-            contentDescription = if (property.photo.isEmpty()) getString(R.string.listing_sample) else property.title
-            loadPhoto(this, property.photo)
+            contentDescription = if (property.photo.isEmpty() && property.photoPath.isEmpty()) getString(R.string.listing_sample) else property.title
+            if (backend.enabled && property.photoPath.isNotEmpty()) CloudPhotos.load(this, backend.photoUrl(property.photoPath))
+            else loadPhoto(this, property.photo)
         })
-        if (property.photo.isEmpty()) text(parent, getString(R.string.listing_sample), 12f)
+        if (property.photo.isEmpty() && property.photoPath.isEmpty()) text(parent, getString(R.string.listing_sample), 12f)
     }
     private fun propertyPrice(property: Property): String {
         val format = NumberFormat.getNumberInstance(resources.configuration.locales[0])
@@ -349,8 +381,12 @@ class MainActivity : AppCompatActivity() {
             click(R.id.listing_submit) { saveProperty() }
         }
         findViewById<LinearLayout>(R.id.own_listings)?.let { parent ->
-            val items = propertyStore.all()
-            text(parent, getString(R.string.your_listings), 22f)
+            val items = properties().filter { current != "my_listings" || owns(it) }
+            text(parent, getString(if (backend.enabled && current != "my_listings") R.string.cloud_listings else R.string.your_listings), 22f)
+            if (backend.enabled) {
+                button(parent, R.string.cloud_refresh) { refreshListings(true) }
+                text(parent, getString(R.string.cloud_cached), 12f)
+            }
             text(parent, if (items.isEmpty()) getString(R.string.listing_empty)
                 else getString(R.string.listing_saved_count, items.size))
             items.forEach { property ->
@@ -372,7 +408,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         findViewById<LinearLayout>(R.id.property_content)?.let { parent ->
-            val property = propertyStore.all().find { it.id == selectedProperty }
+            val property = properties().find { it.id == selectedProperty }
             if (property == null) { text(parent, getString(R.string.listing_empty)); return@let }
             photo(parent, property, 260)
             text(parent, getString(if (property.purpose == "rent") R.string.listing_for_rent else R.string.listing_for_sale), 12f)
@@ -384,32 +420,32 @@ class MainActivity : AppCompatActivity() {
             if (propertyAttributes(property).isNotBlank()) text(parent, propertyAttributes(property), 18f)
             if (property.latitude != null && property.longitude != null) {
                 text(parent, pinLabel(property.latitude, property.longitude), 14f)
-                button(parent, R.string.location_details) {
+                if (owns(property)) button(parent, R.string.location_details) {
                     mapPicker = MapPicker(this).also { it.show(property.latitude, property.longitude) { lat, lon ->
-                        if (propertyStore.save(property.copy(latitude = lat, longitude = lon, locationSource = "map")))
+                        saveListing(property.copy(latitude = lat, longitude = lon, locationSource = "map"), true) {
                             show("my_property", false)
-                        else toast(getString(R.string.listing_save_error))
+                        }
                     } }
                 }
             }
-            button(parent, R.string.listing_photo) { photoPicker.launch(arrayOf("image/*")) }
+            if (owns(property)) button(parent, R.string.listing_photo) { photoPicker.launch(arrayOf("image/*")) }
             if (property.description.isNotBlank()) text(parent, property.description)
-            text(parent, getString(R.string.listing_local), 13f)
-            button(parent, R.string.listing_remove) {
+            text(parent, getString(if (property.ownerId.isEmpty()) R.string.listing_local else R.string.cloud_published), 13f)
+            if (backend.enabled && property.ownerId.isEmpty()) button(parent, R.string.cloud_publish_local) {
+                confirmPublish { saveListing(property, false, publishLocal = true) { show("my_property", false) } }
+            }
+            if (owns(property)) button(parent, R.string.listing_remove) {
                 AlertDialog.Builder(this).setMessage(R.string.listing_delete_confirm)
                     .setNegativeButton(R.string.listing_cancel, null)
                     .setPositiveButton(R.string.listing_remove) { _, _ ->
-                        if (propertyStore.delete(property.id)) {
-                            if (property.photo.isNotEmpty()) File(filesDir, property.photo).delete()
-                            show("my_listings")
-                        } else toast(getString(R.string.listing_save_error))
+                        deleteListing(property)
                     }.show()
             }
         }
     }
     private fun saveProperty() {
         if (composer?.validateAll() != true) return
-        val property = Property(UUID.randomUUID().toString(), value(R.id.property_title), value(R.id.property_location),
+        val property = Property(draftPropertyId, value(R.id.property_title), value(R.id.property_location),
             PropertyStore.number(value(R.id.property_area))!!.toPlainString(),
             PropertyStore.integer(value(R.id.property_price))!!.toString(), value(R.id.property_description), selectedPhoto,
             negotiable = findViewById<CheckBox>(R.id.property_negotiable).isChecked,
@@ -417,7 +453,10 @@ class MainActivity : AppCompatActivity() {
             type = when (composer?.choice(R.id.property_type)) { R.id.type_house -> "house"; R.id.type_villa -> "villa"; else -> "apartment" },
             floors = when (composer?.choice(R.id.property_floors)) { R.id.floor_two -> 2; R.id.floor_more -> 3; else -> 1 },
             latitude = propertyLatitude, longitude = propertyLongitude, locationSource = propertyLocationSource)
-        if (!propertyStore.save(property)) { toast(getString(R.string.listing_save_error)); return }
+        if (backend.enabled) confirmPublish { saveListing(property, false) { listingSaved(property) } }
+        else saveListing(property, false) { listingSaved(property) }
+    }
+    private fun listingSaved(property: Property) {
         selectedProperty = property.id
         selectedPhoto = ""
         if (prefs.getBoolean("sound", false)) {
@@ -431,6 +470,127 @@ class MainActivity : AppCompatActivity() {
         if (history.lastOrNull() != "my_listings") history.add("my_listings")
         show("my_property", false)
         toast(getString(R.string.listing_created))
+    }
+    private fun bindCloudControls() {
+        if (!backend.enabled) return
+        if (current == "signup") {
+            findViewById<View>(R.id.signup_phone)?.visibility = View.GONE
+            findViewById<View>(R.id.signup_phone_label)?.visibility = View.GONE
+        }
+        if (current == "login") {
+            findViewById<TextView>(R.id.login_title)?.setText(R.string.cloud_sign_in)
+            findViewById<EditText>(R.id.login_phone)?.apply {
+                setHint(R.string.cloud_email); inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                if (android.os.Build.VERSION.SDK_INT >= 26) setAutofillHints(View.AUTOFILL_HINT_EMAIL_ADDRESS)
+            }
+            findViewById<View>(R.id.login_password)?.visibility = View.VISIBLE
+            findViewById<TextView>(R.id.login_label)?.setText(R.string.cloud_email)
+            findViewById<TextView>(R.id.login_intro)?.setText(R.string.cloud_login_hint)
+            findViewById<TextView>(R.id.login_footer)?.setText(R.string.cloud_login_hint)
+        }
+        findViewById<LinearLayout>(R.id.cloud_account_panel)?.let { panel ->
+            findViewById<TextView>(R.id.account_intro)?.setText(R.string.cloud_account_hint)
+            text(panel, if (backend.userId.isEmpty()) getString(R.string.cloud_sign_in_required) else backend.email, 18f)
+            button(panel, if (backend.userId.isEmpty()) R.string.cloud_sign_in else R.string.cloud_sign_out) {
+                if (backend.userId.isEmpty()) show("login")
+                else cloudAction({ backend.signOut() }) { show("account", false) }
+            }
+        }
+    }
+    private fun authenticate(signUp: Boolean) {
+        val emailId = if (signUp) R.id.email else R.id.login_phone
+        val passwordId = if (signUp) R.id.password else R.id.login_password
+        if (signUp && !valid(R.id.full_name, value(R.id.full_name).length >= 2, getString(R.string.error_name))) return
+        if (!valid(emailId, android.util.Patterns.EMAIL_ADDRESS.matcher(value(emailId)).matches(), getString(R.string.error_email))) return
+        val password = findViewById<EditText>(passwordId).text.toString()
+        if (!valid(passwordId, password.length >= 6, getString(R.string.error_password))) return
+        if (signUp && !findViewById<CheckBox>(R.id.terms).isChecked) { toast(getString(R.string.accept_terms)); return }
+        val email = value(emailId)
+        val name = if (signUp) value(R.id.full_name) else ""
+        cloudAction({ if (signUp) backend.signUp(name, email, password) else { backend.signIn(email, password); true } }) { signedIn ->
+            if (signedIn) { show("home"); refreshListings(false) }
+            else { show("login"); AlertDialog.Builder(this).setMessage(R.string.cloud_confirm_email).setPositiveButton(android.R.string.ok, null).show() }
+        }
+    }
+    private fun confirmPublish(action: () -> Unit) {
+        if (backend.userId.isEmpty()) { toast(getString(R.string.cloud_sign_in_required)); return }
+        AlertDialog.Builder(this).setTitle(R.string.cloud_publish_title).setMessage(R.string.cloud_publish_warning)
+            .setNegativeButton(R.string.listing_cancel, null).setPositiveButton(R.string.cloud_publish) { _, _ -> action() }.show()
+    }
+    private fun saveListing(property: Property, existing: Boolean, publishLocal: Boolean = false, failed: () -> Unit = {}, done: () -> Unit) {
+        if (!backend.enabled || (existing && property.ownerId.isEmpty() && !publishLocal)) {
+            if (propertyStore.save(property)) done() else { failed(); toast(getString(R.string.listing_save_error)) }
+            return
+        }
+        // Legacy records may predate required map/type/floor fields. Keep them private for correction.
+        if (property.latitude == null || property.longitude == null || property.type !in listOf("apartment", "house", "villa") ||
+            property.floors !in 1..3 || PropertyStore.integer(property.price) == null) {
+            failed(); toast(getString(R.string.cloud_legacy_incomplete)); return
+        }
+        cloudAction({
+            val saved = backend.save(property, existing && property.ownerId.isNotEmpty())
+            cloudCache.save(saved)
+            if (publishLocal) propertyStore.delete(property.id)
+            if (property.photo.isNotEmpty() && propertyStore.all().none { it.photo == property.photo }) File(filesDir, property.photo).delete()
+        }, failed = failed) { done() }
+    }
+    private fun deleteListing(property: Property) {
+        if (!backend.enabled || property.ownerId.isEmpty()) {
+            if (propertyStore.delete(property.id)) {
+                if (property.photo.isNotEmpty()) File(filesDir, property.photo).delete()
+                show("my_listings")
+            } else toast(getString(R.string.listing_save_error))
+            return
+        }
+        cloudAction({ backend.delete(property); cloudCache.delete(property.id) }) { show("my_listings") }
+    }
+    private fun refreshListings(report: Boolean) {
+        if (refreshing || cloudBusy) return
+        refreshing = true
+        val screen = current
+        SupabaseBackend.worker.execute {
+            val result = runCatching { cloudCache.replace(backend.listings()) }
+            runOnUiThread {
+                refreshing = false
+                if (isDestroyed || isFinishing) return@runOnUiThread
+                if (result.isSuccess) {
+                    if (current == screen && current in listOf("home", "listings", "my_listings", "my_property")) show(current, false)
+                    if (report) toast(getString(R.string.cloud_refreshed))
+                } else if (report) toast(getString(R.string.cloud_error))
+            }
+        }
+    }
+    private fun <T> cloudAction(work: () -> T, showProgress: Boolean = true, reportError: Boolean = true, failed: () -> Unit = {}, done: (T) -> Unit) {
+        if (cloudBusy) return
+        cloudBusy = true
+        val dialog = if (showProgress) AlertDialog.Builder(this).setMessage(R.string.cloud_working).setCancelable(false).show() else null
+        cloudDialog = dialog
+        SupabaseBackend.worker.execute {
+            val result = runCatching(work)
+            runOnUiThread {
+                cloudBusy = false
+                if (isDestroyed || isFinishing) return@runOnUiThread
+                dialog?.dismiss(); cloudDialog = null
+                result.fold(done) { error ->
+                    failed()
+                    if (reportError) {
+                        val message = when (error) {
+                            is SupabaseBackend.BackendException -> error.messageId
+                            is SupabaseBackend.HttpFailure -> when (error.status) {
+                                400, 401 -> R.string.cloud_auth_error
+                                403 -> R.string.cloud_not_owner
+                                409 -> R.string.cloud_conflict
+                                404 -> R.string.cloud_setup_error
+                                429 -> R.string.cloud_rate_limit
+                                else -> R.string.cloud_error
+                            }
+                            else -> R.string.cloud_error
+                        }
+                        AlertDialog.Builder(this).setMessage(message).setPositiveButton(android.R.string.ok, null).show()
+                    }
+                }
+            }
+        }
     }
     fun hasPropertyPin() = propertyLatitude != null && propertyLongitude != null
     private fun pinLabel(latitude: Double, longitude: Double): String {

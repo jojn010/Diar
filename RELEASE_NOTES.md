@@ -1,3 +1,15 @@
+# Diar 1.3.0 — Supabase connection preview
+
+Connect configured builds to Supabase email/password authentication, shared listings and public listing photos. Sign-in sessions are encrypted with Android Keystore and refreshed before writes. Published listings have owner-only edits/deletion enforced by database and storage policies. Home/Search show loaded shared listings; My listings filters to the signed-in owner and remaining local homes.
+
+Keep existing local listings and photos intact until the user explicitly chooses to publish. Add bilingual publication warnings, connection errors, refresh controls and email-confirmation guidance. Retain the three-step composer, single integer price, negotiability, sale/rent, types/floors, map pins and photos. Payments, messaging and sample homes remain demonstrations.
+
+Project settings belong in untracked local.properties; no admin credential is needed. Apply both SQL migrations once in Supabase. Automated checks force offline configuration and fake network transports to avoid touching live listings. A separate configured smoke test only reads live data.
+
+Validation: build and lint (no errors), five unit tests, seventeen isolated emulator tests, and the configured English/Arabic live-read/login smoke test passed. Live REST checks with two disposable confirmed users verified listing/photo CRUD and cross-owner RLS protections; test data/accounts were removed. A signed-in Android publication walkthrough remains before a public pilot. Payments, messaging, password recovery and account deletion are not implemented. This is a debug-signed development preview.
+
+---
+
 # Diar 1.2.3 — Arabic map accessibility
 
 The map zoom buttons previously retained English labels even when the app was in Arabic. Their accessible names and tooltips now follow the app language: **تكبير / تصغير** in Arabic and **Zoom in / Zoom out** in English. The map document also declares the selected language for assistive technology.

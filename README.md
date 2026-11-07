@@ -1,6 +1,6 @@
 # Diar — a home for every story
 
-A native Android presentation app with English/Arabic UI and device-local property listings. Open the repository root in Android Studio. Choose **Get started → Explore homes** to browse without registration.
+A native Android app with English/Arabic UI, Supabase accounts, shared property listings and photo storage when configured. Open the repository root in Android Studio. Choose **Get started → Explore homes** to browse without registration.
 
 ## List a home
 
@@ -14,17 +14,30 @@ Prices accept English, Arabic and Persian digits from 1 to one billion; fraction
 
 Choose **View my listings** to see only your own saved homes. Listings also appear on Home and Listings and in Search. Open a listing to see its purpose, type, floors, price, negotiability, area, location and photo. You can replace its photo, adjust its map pin, or delete it with confirmation.
 
-## Local storage and photos
+## Supabase setup and existing local homes
 
-There is no backend or database service. Property records are JSON in app-private preferences; selected photos are resized, camera orientation is applied, and JPEG copies are saved in app-private files. Original picker permissions are not needed to view saved photos later. Listings survive restarts and screen recreation. Older 1.1 listings remain readable without invented floor/type/location details. Device-local listing records and photos are excluded from Android cloud backup and device transfer. Uninstalling the app removes them.
+The configured app uses Supabase Auth (email/password), PostgreSQL listings and a public `listing-photos` Storage bucket. Published homes appear on other devices after refreshing. Only owners can change/delete listings; server-side row-level security enforces ownership. All chosen photos are resized, camera orientation is applied, and JPEGs are uploaded. Publication explicitly warns that details, map coordinates and the photo become public.
 
-Leaving the composer through Back or navigation discards its unsaved photo; changing steps or recreating the activity keeps the active draft photo. Cleanup protects photos referenced by saved listings.
+1. Run the SQL files in `supabase/migrations` in filename order in your Supabase SQL Editor, once per project. Never disable RLS to fix an error.
+2. Add these lines to untracked `local.properties` alongside `sdk.dir`:
+   ```properties
+   supabase.url=https://YOUR_PROJECT_REF.supabase.co
+   supabase.publishableKey=YOUR_PUBLISHABLE_OR_LEGACY_ANON_KEY
+   ```
+3. Sync Android Studio and run the `app` configuration. The publishable key is intended for mobile clients; **never** use a secret, service-role key or database password in the app.
+4. Create an account, confirm your email, then sign in. Hosted Supabase email confirmation is supported; confirm the email and return to the app to sign in. Configure your project's email delivery and confirmation destination before inviting a pilot group. OAuth, password recovery and account deletion are not implemented yet.
 
-A clearly labelled sample photo appears until a personal photo is selected. New listings are not published online. Authentication, social sign-in, checkout and remote messaging remain demonstrations; checkout does not charge or store card details. The original sample map screen remains an illustration.
+Access/refresh tokens are encrypted with Android Keystore. Passwords are never persisted. Public listing metadata is cached privately for browsing; online saves require a successful server response. There is no offline write queue or realtime subscription: use **Refresh homes** for changes from another device. This initial implementation fetches listings in pages and displays the loaded collection; server-side search/pagination should precede large-scale use.
+
+Existing device-local homes/photos are preserved and **never automatically uploaded**. Open one and choose **Publish this local home**. Incomplete older listings need a new listing with the required fields. Successfully migrated listings use the cloud as their source of truth. Local homes, cached metadata, session data and private photos are excluded from Android backup/device transfer. Uninstalling removes private local homes; published homes remain in Supabase.
+
+Without Supabase settings, or with `-PdiarOffline=true`, the app runs the original device-local prototype. Leaving the composer discards its unsaved photo; step changes and recreation retain the draft. Photos referenced by saved local homes are protected.
+
+Social sign-in, checkout, remote messaging, notifications and the original sample homes/map remain demonstrations. Checkout does not charge or store card details. This is a development preview, not a production-ready marketplace.
 
 ## Map picker
 
-The actual listing map picker uses bundled Leaflet 1.9.4 with standard OpenStreetMap tiles and visible attribution. Pan, zoom and tap to select a pin. **Map tiles need internet**; a loading/error message and latitude/longitude fields provide a fallback when tiles cannot load. Opening the map does not publish listing data or photos. The map provider receives the normal requests needed to display map tiles. Coordinates are saved only when confirmed. Current device location may be approximate and can be refined using the map.
+The actual listing map picker uses bundled Leaflet 1.9.4 with standard OpenStreetMap tiles and visible attribution. Pan, zoom and tap to select a pin. **Map tiles need internet**; a loading/error message and latitude/longitude fields provide a fallback when tiles cannot load. Opening the map does not publish listing data or photos. The map provider receives the normal requests needed to display map tiles. Coordinates are applied to the form only when confirmed and are uploaded only when the home is published or its published pin is updated. Current device location may be approximate and can be refined using the map.
 
 Leaflet’s license is in `app/src/main/assets/LEAFLET-LICENSE.txt`. Map integration follows the [Leaflet guide](https://leafletjs.com/examples/quick-start/) and [OpenStreetMap tile policy](https://operations.osmfoundation.org/policies/tiles/).
 
@@ -38,9 +51,17 @@ Use **Language / العربية** on the start, welcome or account screen. The c
 
 This checkout is `/home/jojn10/Documents/ChatGPT/diar`. Android SDK configuration belongs in untracked `local.properties`.
 
-Run `./tools/check_app.sh` to build the debug APK, run unit tests, lint, and run instrumented tests on a connected `emulator-*` device. The script explicitly selects an emulator and reports skipped instrumented tests if none is running. It does not install onto a physical phone. To select a dedicated test emulator, run `ANDROID_SERIAL=emulator-5556 ./tools/check_app.sh`; physical-device serials are rejected.
+Run `./tools/check_app.sh` to build the debug APK, run unit tests, lint, and run instrumented tests on a connected `emulator-*` device. The script builds with `-PdiarOffline=true` so tests cannot publish or delete live data. It explicitly selects an emulator and reports skipped instrumented tests if none is running. It does not install onto a physical phone. To select a dedicated test emulator, run `ANDROID_SERIAL=emulator-5556 ./tools/check_app.sh`; physical-device serials are rejected.
 
 Emulator coverage includes English/Arabic screen navigation and RTL, the three-step composer, integer price validation, negotiability, sale/rent, all property and floor choices, map pin selection, current location with a mock GPS fix, recreation, listing search/deletion, migration of older listings and locally imported camera-photo orientation.
+
+Additional fake-transport emulator tests cover encrypted session restoration, token refresh, owner checks, email-confirmation signup, failed-upload cleanup, offline logout and cloud-cache serialization. To run the configured **read-only** cloud smoke test (English/Arabic login, RTL and listing API) on an emulator:
+
+```bash
+ANDROID_SERIAL=emulator-5554 ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.diar.CloudUiSmokeTest
+```
+
+Do not run the legacy local-mutation tests against a configured live project. Rebuild normally with `./gradlew assembleDebug` after offline checks before using/publishing the connected APK. Live REST checks with two disposable confirmed QA users verified photo upload/removal, listing create/edit/delete, public reads, and server rejection of cross-owner writes/deletes and forged ownership. The accounts and test data were removed afterward. The configured Android smoke test verifies live reads and bilingual login/RTL. A signed-in Android publish walkthrough remains to be completed; the separate opt-in `SupabaseLiveTest` accepts disposable QA credentials through instrumentation arguments. The default suite never creates real users or sends confirmation emails.
 
 Layouts live in `app/src/main/res/layout`; shared colors/styles in `res/values`; translations in `res/values-ar`. The old `tools/generate_layouts.py` creates the initial reference scaffold and **overwrites edits**, so it is not part of the build and should not be rerun to update this composer.
 

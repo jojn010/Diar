@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-./gradlew assembleDebug testDebugUnitTest lintDebug --console=plain
+./gradlew -PdiarOffline=true assembleDebug testDebugUnitTest lintDebug --console=plain
 adb_path="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/Android/Sdk}}/platform-tools/adb"
 if [[ ! -x "$adb_path" ]]; then
   echo 'Build/unit/lint finished. Emulator tests skipped: adb unavailable.'
@@ -19,4 +19,4 @@ if [[ -z "$emulator_serial" ]]; then
   echo 'Build/unit/lint finished. Emulator tests skipped: no running emulator.'
   exit 0
 fi
-ANDROID_SERIAL="$emulator_serial" ./gradlew connectedDebugAndroidTest --console=plain
+ANDROID_SERIAL="$emulator_serial" ./gradlew -PdiarOffline=true connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notClass=com.example.diar.CloudUiSmokeTest,com.example.diar.SupabaseLiveTest --console=plain

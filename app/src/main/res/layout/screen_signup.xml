@@ -14,7 +14,7 @@
             <ImageView ns0:layout_width="match_parent" ns0:layout_height="110dp" ns0:src="@drawable/diar_logo" ns0:scaleType="fitCenter" ns0:contentDescription="@string/screen_signup_contentdescription_7" ns0:background="@drawable/cream" ns0:layout_marginBottom="20dp" />
             <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_10" />
             <EditText ns0:id="@+id/full_name" style="@style/Field" ns0:hint="@string/screen_signup_hint_11" ns0:inputType="textPersonName" ns0:autofillHints="textPersonName" />
-            <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_12" />
+            <TextView style="@style/Muted" ns0:id="@+id/signup_phone_label" ns0:text="@string/screen_signup_text_12" />
             <EditText ns0:id="@+id/signup_phone" style="@style/Field" ns0:hint="@string/screen_signup_hint_13" ns0:inputType="phone" ns0:autofillHints="phone" ns0:textDirection="ltr" ns0:gravity="start|center_vertical" />
             <TextView style="@style/Muted" ns0:text="@string/screen_signup_text_14" />
             <EditText ns0:id="@+id/email" style="@style/Field" ns0:hint="@string/screen_signup_hint_15" ns0:inputType="textEmailAddress" ns0:autofillHints="textEmailAddress" ns0:textDirection="ltr" ns0:gravity="start|center_vertical" />

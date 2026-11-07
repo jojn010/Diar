@@ -3,9 +3,13 @@
     <cloud-backup>
         <exclude domain="file" path="." />
         <exclude domain="sharedpref" path="diar_properties.xml" />
+        <exclude domain="sharedpref" path="diar_cloud_session.xml" />
+        <exclude domain="sharedpref" path="diar_public_cache.xml" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="file" path="." />
         <exclude domain="sharedpref" path="diar_properties.xml" />
+        <exclude domain="sharedpref" path="diar_cloud_session.xml" />
+        <exclude domain="sharedpref" path="diar_public_cache.xml" />
     </device-transfer>
 </data-extraction-rules>
