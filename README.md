@@ -16,7 +16,7 @@ Choose **View my listings** to see only your own saved homes. Listings also appe
 
 ## Supabase setup and existing local homes
 
-The configured app uses Supabase Auth (email/password), PostgreSQL listings and a public `listing-photos` Storage bucket. Published homes appear on other devices after refreshing. Only owners can change/delete listings; server-side row-level security enforces ownership. All chosen photos are resized, camera orientation is applied, and JPEGs are uploaded. Publication explicitly warns that details, map coordinates and the photo become public.
+The configured app uses Supabase Auth (email/password), PostgreSQL listings and a public `listing-photos` Storage bucket. Published homes appear in the app and [Diar Web](https://github.com/jojn010/Diar-Web) after refreshing or the foreground 30-second sync. Only owners can change/delete listings; server-side row-level security enforces ownership. All chosen photos are resized, camera orientation is applied, and JPEGs are uploaded. Publication explicitly warns that details, map coordinates and the photo become public.
 
 1. Run the SQL files in `supabase/migrations` in filename order in your Supabase SQL Editor, once per project. Never disable RLS to fix an error.
 2. Add these lines to untracked `local.properties` alongside `sdk.dir`:
@@ -25,9 +25,9 @@ The configured app uses Supabase Auth (email/password), PostgreSQL listings and 
    supabase.publishableKey=YOUR_PUBLISHABLE_OR_LEGACY_ANON_KEY
    ```
 3. Sync Android Studio and run the `app` configuration. The publishable key is intended for mobile clients; **never** use a secret, service-role key or database password in the app.
-4. Create an account, confirm your email, then sign in. Hosted Supabase email confirmation is supported; confirm the email and return to the app to sign in. Configure your project's email delivery and confirmation destination before inviting a pilot group. OAuth, password recovery and account deletion are not implemented yet.
+4. Create an account and sign in. Email confirmation follows your Supabase project setting; if enabled, confirm the email before signing in. Configure email delivery and confirmation destinations before enabling confirmation for a pilot group. OAuth, password recovery and account deletion are not implemented yet.
 
-Access/refresh tokens are encrypted with Android Keystore. Passwords are never persisted. Public listing metadata is cached privately for browsing; online saves require a successful server response. There is no offline write queue or realtime subscription: use **Refresh homes** for changes from another device. This initial implementation fetches listings in pages and displays the loaded collection; server-side search/pagination should precede large-scale use.
+Access/refresh tokens are encrypted with Android Keystore. Passwords are never persisted. Public listing metadata is cached privately for browsing; online saves require a successful server response. Listing saves require internet. Listings and account favorites are checked every 30 seconds while browsing in the foreground; **Refresh homes** also checks immediately. This is polling, not a realtime subscription. Favorite changes have a durable retry queue; listing edits do not. This initial implementation fetches listings in pages and displays the loaded collection; server-side search/pagination should precede large-scale use.
 
 Existing device-local homes/photos are preserved and **never automatically uploaded**. Open one and choose **Publish this local home**. Incomplete older listings need a new listing with the required fields. Successfully migrated listings use the cloud as their source of truth. Local homes, cached metadata, session data and private photos are excluded from Android backup/device transfer. Uninstalling removes private local homes; published homes remain in Supabase.
 
@@ -39,7 +39,7 @@ All sample and real property cards use `item_property_card.xml`, including the s
 
 ## Favorites and listing actions
 
-Real local/published homes have a heart action on their cards and details. Favorites shows the same home cards and opens the same detail view, with remove controls. Saved IDs persist privately on this device and are separated by signed-in account (and guest mode); they do not sync through Supabase yet. A missing/deleted listing is shown as unavailable, without retaining a second copy of its details. Refresh checks the latest loaded homes.
+Real local/published homes have a heart action on their cards and details. Favorites shows the same home cards and opens the same detail view, with remove controls. Published-home favorites sync through `public.favorites`, privately scoped to the signed-in account by RLS. Android imports that account’s existing saved IDs once, then follows server changes. Offline taps persist in a per-account queue; an older response cannot erase a newer tap. Guest favorites and private device-local homes remain on the device. A missing/deleted listing is shown as unavailable, without retaining a second copy of its details. Refresh checks the latest loaded homes.
 
 All real listing detail views offer sharing through the Android share sheet and opening the confirmed pin in an installed maps app. Photo, price and attributes use the same visual style for owners and visitors. Only owners see photo replacement, pin editing and deletion. Sharing sends listing text, not an invented public web link. Sample-home tour/chat/payment actions remain demonstrations and are not represented as working actions on real listings.
 
@@ -58,6 +58,8 @@ Use **Language / العربية** on the start, welcome or account screen. The c
 ## Develop and verify
 
 This checkout is `/home/jojn10/Documents/ChatGPT/diar`. Android SDK configuration belongs in untracked `local.properties`.
+
+The platform-independent `shared` module owns the exact `Listing`, `Favorite` and favorite merge contracts used by Android and the Spring Boot website. It has no Android SDK dependency. Run `./gradlew :shared:test` for its contract and sync regressions.
 
 Run `./tools/check_app.sh` to build the debug APK, run unit tests, lint, and run instrumented tests on a connected `emulator-*` device. The script builds with `-PdiarOffline=true` so tests cannot publish or delete live data. It explicitly selects an emulator and reports skipped instrumented tests if none is running. It does not install onto a physical phone. To select a dedicated test emulator, run `ANDROID_SERIAL=emulator-5556 ./tools/check_app.sh`; physical-device serials are rejected.
 

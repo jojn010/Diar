@@ -21,8 +21,8 @@ android {
         applicationId = "com.example.diar"
         minSdk = 24
         targetSdk = 37
-        versionCode = 12
-        versionName = "1.3.4"
+        versionCode = 13
+        versionName = "1.4.0"
 
         buildConfigField("String", "SUPABASE_URL", configString(if (offlineChecks) "" else backend.getProperty("supabase.url", "")))
         buildConfigField("String", "SUPABASE_KEY", configString(if (offlineChecks) "" else backend.getProperty("supabase.publishableKey", "")))
@@ -45,6 +45,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":shared"))
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)

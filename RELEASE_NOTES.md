@@ -1,3 +1,15 @@
+# Diar 1.4.0 — Favorites shared with Diar Web
+
+Published-home favorites now sync privately per account through Supabase. Existing account favorites merge once; subsequent cloud removals are respected. Offline taps persist on disk, newer taps survive in-flight responses, and deleted homes cannot trap the sync queue. Guest favorites and unpublished local homes stay local.
+
+Extract the canonical listing and favorite classes into a platform-independent `shared` JVM module consumed by Android and the separate Spring Boot [Diar Web repository](https://github.com/jojn010/Diar-Web). Check listings and favorites every 30 seconds while browsing in the foreground, without resetting the composer or unchanged pages. Keep owner-only listing/photo rules.
+
+Apply `202611200001_synced_favorites.sql` once after the existing migrations. This adds a composite account/listing key, cascading references, a listing index and three owner-only RLS policies. It does not publish local homes. The migration was applied to the configured project; rollback-only SQL checks verified owner read/add/remove and rejected cross-account reads/deletes/forged owners.
+
+Validation: Android build, seven unit tests, six shared JVM tests and lint passed. Instrumented test APK compiled, but this session could not run emulator tests: the installed emulator repeatedly exited with a host segmentation fault before connecting to adb. Added three emulator regressions for migration, offline/newer-tap handling and account separation; these are not reported as executed. No physical phone was installed or modified. A real signed-in Android ↔ website round trip remains to be verified.
+
+---
+
 # Diar 1.3.4 — One property-card design
 
 Replace the separate plain real-listing cards and hand-built sample cards with one shared XML component across Home, Listings, Discover and Favorites. Both now use the same 210dp rounded photo, sage information panel, typography, compact metadata, padding, elevation and overlaid heart action. Real listing prices and attributes remain factual; sample-only ratings are not invented for published homes. Sample listings are labelled as demonstrations.

@@ -320,4 +320,5 @@
 <string name="listing_owner_tools">إدارة إعلانك</string>
 <string name="sample_listing_label">إعلان تجريبي</string>
 <string name="card_sample_photo">صورة توضيحية</string>
+<string name="favorites_sync_hint">تتزامن مفضلة العقارات المنشورة مع حسابك. تُعاد محاولة مزامنة التغييرات دون اتصال عند التحديث. تبقى العقارات المحلية الخاصة على هذا الجهاز.</string>
 </resources>

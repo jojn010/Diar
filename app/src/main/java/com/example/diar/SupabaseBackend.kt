@@ -1,6 +1,8 @@
 package com.example.diar
 
 import android.content.Context
+import com.diar.shared.Listing
+import com.diar.shared.Favorite
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
@@ -73,13 +75,34 @@ class SupabaseBackend(context: Context,
             for (index in 0 until page.length()) rows.put(page.getJSONObject(index))
             offset += page.length()
         } while (page.length() == 200)
-        return (0 until rows.length()).map { i -> val row = rows.getJSONObject(i)
-            Property(row.getString("id"), row.getString("title"), row.getString("location"),
-                row.getString("area"), row.getString("price"), row.optString("description"), "",
-                row.getBoolean("negotiable"), row.getString("purpose"), row.getString("type"), row.getInt("floors"),
-                row.getDouble("latitude"), row.getDouble("longitude"), row.getString("location_source"),
-                row.getString("owner_id"), row.optString("photo_path"))
+        return (0 until rows.length()).map { index ->
+            val row = rows.getJSONObject(index)
+            Listing.fromRow(row.keys().asSequence().associateWith { row.opt(it).takeUnless { value -> value === JSONObject.NULL } }).toProperty()
         }
+    }
+    fun favoriteIds(): Set<String> {
+        val access = token()
+        val result = mutableSetOf<String>()
+        var offset = 0
+        do {
+            val rows = JSONArray(request("GET", "/rest/v1/favorites?select=listing_id&user_id=eq.$userId&order=listing_id&limit=200&offset=$offset", token = access))
+            for (index in 0 until rows.length()) result.add(rows.getJSONObject(index).getString("listing_id"))
+            offset += rows.length()
+        } while (rows.length() == 200)
+        return result
+    }
+
+    fun setFavorite(id: String, saved: Boolean) {
+        val access = token()
+        val favorite = Favorite(userId, id)
+        if (saved) {
+            try { request("POST", "/rest/v1/favorites", JSONObject(favorite.toRow()).toString().toByteArray(), access) }
+            catch (error: HttpFailure) {
+                val duplicate = error.status == 409 && error.code == "23505"
+                val deleted = error.code == "23503" && JSONArray(request("GET", "/rest/v1/listings?select=id&id=eq.$id")).length() == 0
+                if (!duplicate && !deleted) throw error
+            }
+        } else request("DELETE", "/rest/v1/favorites?user_id=eq.$userId&listing_id=eq.$id", token = access)
     }
     fun save(property: Property, existing: Boolean): Property {
         val access = token()
@@ -95,10 +118,7 @@ class SupabaseBackend(context: Context,
             request("POST", "/storage/v1/object/listing-photos/$uploaded", file.readBytes(), access, "image/jpeg")
             photoPath = uploaded
         }
-        val row = property.json().apply {
-            remove("photo"); remove("locationSource"); remove("ownerId"); remove("photoPath")
-            put("owner_id", owner); put("location_source", property.locationSource); put("photo_path", photoPath)
-        }
+        val row = JSONObject(property.toListing(owner, photoPath).toRow())
         try {
             request(if (existing) "PATCH" else "POST",
                 "/rest/v1/listings" + if (existing) "?id=eq.${property.id}&owner_id=eq.$owner" else "",

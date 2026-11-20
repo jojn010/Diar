@@ -19,3 +19,5 @@ local.properties
 *.keystore
 .env
 .env.*
+
+/shared/build/

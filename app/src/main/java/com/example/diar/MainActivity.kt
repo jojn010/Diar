@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private val cloudCache by lazy { PropertyStore(this, "diar_public_cache") }
     private var cloudBusy = false
     private var refreshing = false
+    private var syncingFavorites = false
     private var cloudDialog: AlertDialog? = null
     private fun properties(): List<Property> {
         if (!backend.enabled) return propertyStore.all()
@@ -67,6 +68,17 @@ class MainActivity : AppCompatActivity() {
     private var propertyLocationSource = ""
     private var mapPicker: MapPicker? = null
     private var locationCancellation: androidx.core.os.CancellationSignal? = null
+    private val syncHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val foregroundSync = object : Runnable {
+        override fun run() {
+            if (backend.enabled && current != "sell") refreshListings(false)
+            syncHandler.postDelayed(this, 30_000)
+        }
+    }
+    override fun onStart() {
+        super.onStart()
+        syncHandler.postDelayed(foregroundSync, 30_000)
+    }
     private val locationHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val locationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         if (granted && current == "sell") requestDeviceLocation()
@@ -98,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         tone?.release(); tone = null; super.onDestroy()
     }
     override fun onStop() {
-        super.onStop(); locationCancellation?.cancel(); locationCancellation = null
+        super.onStop(); syncHandler.removeCallbacks(foregroundSync); locationCancellation?.cancel(); locationCancellation = null
         if (current == "sell") updatePinStatus()
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -198,6 +210,7 @@ class MainActivity : AppCompatActivity() {
         bindSampleCards()
         bindProperties()
         bindCloudControls()
+        if (current == "favorites") syncFavorites()
         click(R.id.change_language) { chooseLanguage() }
         click(R.id.google) { toast(getString(R.string.google_demo)) }
         click(R.id.facebook) { toast(getString(R.string.facebook_demo)) }
@@ -236,12 +249,12 @@ class MainActivity : AppCompatActivity() {
                 else {
                     text(items, getString(R.string.favorite_unavailable))
                     button(items, R.string.favorite_remove) {
-                        if (favorites().set(id, false)) show("favorites", false)
+                        if (favorites().set(id, false)) { show("favorites", false); syncFavorites() }
                         else toast(getString(R.string.listing_save_error))
                     }
                 }
             }
-            text(items, getString(R.string.favorites_device_hint), 13f)
+            text(items, getString(if (backend.enabled && backend.userId.isNotEmpty()) R.string.favorites_sync_hint else R.string.favorites_device_hint), 13f)
             if (backend.enabled) button(items, R.string.cloud_refresh) { refreshListings(true) }
         }
         click(R.id.clear_notifications) {
@@ -391,7 +404,7 @@ class MainActivity : AppCompatActivity() {
             }
             update()
             setOnClickListener {
-                if (favorites().set(property.id, !favorites().contains(property.id))) update()
+                if (favorites().set(property.id, !favorites().contains(property.id))) { update(); syncFavorites() }
                 else toast(getString(R.string.listing_save_error))
             }
             parent.addView(this)
@@ -455,6 +468,7 @@ class MainActivity : AppCompatActivity() {
         heart.setOnClickListener {
             if (favorites().set(property.id, !favorites().contains(property.id))) {
                 if (allowRemove) show("favorites", false) else update()
+                syncFavorites()
             } else toast(getString(R.string.listing_save_error))
         }
         parent.addView(card)
@@ -633,7 +647,7 @@ class MainActivity : AppCompatActivity() {
             cloudCache.save(saved)
             if (publishLocal) propertyStore.delete(property.id)
             if (property.photo.isNotEmpty() && propertyStore.all().none { it.photo == property.photo }) File(filesDir, property.photo).delete()
-        }, failed = failed) { done() }
+        }, failed = failed) { syncFavorites(); done() }
     }
     private fun deleteListing(property: Property) {
         if (!backend.enabled || property.ownerId.isEmpty()) {
@@ -645,17 +659,46 @@ class MainActivity : AppCompatActivity() {
         }
         cloudAction({ backend.delete(property); cloudCache.delete(property.id) }) { show("my_listings") }
     }
+    private fun syncFavorites() {
+        if (!backend.enabled || backend.userId.isEmpty() || syncingFavorites) return
+        syncingFavorites = true
+        val account = backend.userId
+        val store = FavoriteStore(this, account)
+        val before = store.ids()
+        SupabaseBackend.worker.execute {
+            val result = runCatching {
+                val privateIds = propertyStore.all().map { it.id }.toSet()
+                val changes = store.pendingChanges().filterKeys { it !in privateIds }
+                val sent = mutableMapOf<String, Boolean>()
+                changes.forEach { (id, saved) -> backend.setFavorite(id, saved); sent[id] = saved }
+                store.applyRemote(backend.favoriteIds(), sent, privateIds)
+            }
+            runOnUiThread {
+                syncingFavorites = false
+                if (isDestroyed || isFinishing || backend.userId != account) return@runOnUiThread
+                if (result.isSuccess && before != store.ids() && !cloudBusy && current in listOf("home", "listings", "my_listings", "my_property", "favorites")) show(current, false)
+                if (result.isSuccess && before != store.ids() && store.pendingChanges().keys.any { id -> propertyStore.all().none { it.id == id } }) syncFavorites()
+                // Failures leave pending taps on disk and retry on refresh, login or opening Favorites.
+            }
+        }
+    }
     private fun refreshListings(report: Boolean) {
         if (refreshing || cloudBusy) return
         refreshing = true
         val screen = current
         SupabaseBackend.worker.execute {
-            val result = runCatching { cloudCache.replace(backend.listings()) }
+            val result = runCatching {
+                val homes = backend.listings()
+                val changed = cloudCache.all() != homes
+                cloudCache.replace(homes)
+                changed
+            }
             runOnUiThread {
                 refreshing = false
                 if (isDestroyed || isFinishing) return@runOnUiThread
                 if (result.isSuccess) {
-                    if (current == screen && current in listOf("home", "listings", "my_listings", "my_property", "favorites")) show(current, false)
+                    syncFavorites()
+                    if ((report || result.getOrDefault(false)) && current == screen && current in listOf("home", "listings", "my_listings", "my_property", "favorites")) show(current, false)
                     if (report) toast(getString(R.string.cloud_refreshed))
                 } else if (report) toast(getString(R.string.cloud_error))
             }

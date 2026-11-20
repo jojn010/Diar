@@ -1,6 +1,7 @@
 package com.example.diar
 
 import android.content.Context
+import com.diar.shared.Listing
 import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigDecimal
@@ -11,6 +12,9 @@ data class Property(val id: String, val title: String, val location: String,
     val negotiable: Boolean = false, val purpose: String = "sale", val type: String = "unspecified",
     val floors: Int = 0, val latitude: Double? = null, val longitude: Double? = null,
     val locationSource: String = "", val ownerId: String = "", val photoPath: String = "") {
+    fun toListing(owner: String = ownerId, remotePhoto: String = photoPath) = Listing(id, owner, title, location,
+        area.toBigDecimal(), price.toLong(), description, negotiable, purpose, type, floors,
+        requireNotNull(latitude), requireNotNull(longitude), locationSource, remotePhoto)
     fun json() = JSONObject().put("id", id).put("title", title).put("location", location)
         .put("area", area).put("price", price).put("description", description).put("photo", photo)
         .put("negotiable", negotiable).put("purpose", purpose).put("type", type).put("floors", floors)
@@ -54,3 +58,6 @@ class PropertyStore(context: Context, name: String = "diar_properties") {
         }
     }
 }
+
+fun Listing.toProperty() = Property(id, title, location, area.toPlainString(), price.toString(), description, "",
+    isNegotiable, purpose, type, floors, latitude, longitude, locationSource, ownerId, photoPath)
